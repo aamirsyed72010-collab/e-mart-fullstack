@@ -1,3 +1,4 @@
+const functions = require('firebase-functions');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,8 +11,8 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 // Check for required environment variables
-if (!process.env.MONGO_URI || !process.env.SESSION_SECRET || !process.env.PORT) {
-  console.error('FATAL ERROR: MONGO_URI, SESSION_SECRET, and PORT must be defined in .env file');
+if (!process.env.MONGO_URI || !process.env.SESSION_SECRET) {
+  console.error('FATAL ERROR: MONGO_URI and SESSION_SECRET must be defined in .env file');
   process.exit(1);
 }
 
@@ -19,15 +20,17 @@ const User = require('./models/User'); // Import User model
 const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
 
 const app = express();
-const PORT = process.env.PORT;
 
 // Initialize Firebase Admin SDK
 // Make sure your serviceAccountKey.json is in the root of your backend directory
 const serviceAccount = require('./serviceAccountKey.json'); 
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+if (admin.apps.length === 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
 
 // Determine frontend URL based on environment
 const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL_PROD : process.env.FRONTEND_URL_DEV;
@@ -57,7 +60,7 @@ const apiLimiter = rateLimit({
 });
 
 // Apply to all requests that start with /api/
-app.use('/api/', apiLimiter);
+// app.use('/api/', apiLimiter); // In a function, the base path is /api, so this might not be needed or needs adjustment.
 
 // Specific limiter for authentication route
 const authLimiter = rateLimit({
@@ -79,7 +82,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : undefined,
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
   }
 }));
 
@@ -88,17 +91,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Connect to MongoDB
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('MongoDB connected successfully.');
-  } catch (error) {
+}).catch(error => {
     console.error('MongoDB connection failed:', error.message);
     process.exit(1);
-  }
-};
+});
 
-connectDB();
 
 // Passport serialize and deserialize user
 passport.serializeUser((user, done) => {
@@ -188,15 +187,16 @@ app.post('/auth/google/callback', async (req, res) => {
 });
 
 // Define Routes
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/cart', require('./routes/cartRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/wishlist', require('./routes/wishlistRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/qanda', require('./routes/qandaRoutes'));
+app.use('/products', require('./routes/productRoutes'));
+app.use('/cart', require('./routes/cartRoutes'));
+app.use('/orders', require('./routes/orderRoutes'));
+app.use('/wishlist', require('./routes/wishlistRoutes'));
+app.use('/users', require('./routes/userRoutes'));
+app.use('/qanda', require('./routes/qandaRoutes'));
+app.use('/', adminRoutes); // Mount admin routes under /api
 
 // Route to check if user is logged in
-app.get('/api/current_user', (req, res) => {
+app.get('/current_user', (req, res) => {
   if (req.user) {
     res.json(req.user);
   } else {
@@ -206,18 +206,12 @@ app.get('/api/current_user', (req, res) => {
 });
 
 // Route to log out
-app.get('/api/logout', (req, res) => {
+app.get('/logout', (req, res) => {
   req.logout((err) => { // req.logout is added by passport
     if (err) { return next(err); }
     res.redirect(frontendUrl); // Redirect to frontend homepage
   });
 });
-
-// Admin Routes (for seller requests)
-app.use('/api', adminRoutes); // Mount admin routes under /api
-
-
-
 
 // A simple test route
 app.get('/', (req, res) => {
@@ -240,6 +234,4 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ msg: message });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+exports.api = functions.https.onRequest(app);

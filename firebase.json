@@ -1,4 +1,8 @@
 {
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
+  },
   "hosting": {
     "public": "e-mart-frontend/build",
     "ignore": [
@@ -7,6 +11,10 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      {
+        "source": "/api/**",
+        "function": "api"
+      },
       {
         "source": "**",
         "destination": "/index.html"
