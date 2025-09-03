@@ -5,7 +5,7 @@ import { fetchProductById } from 'services/api';
 import { useCart } from 'context/CartContext';
 import { useWishlist } from 'context/WishlistContext';
 import { useAuth } from 'context/AuthContext';
-import { submitReview, fetchQandA, askQuestion, answerQuestion } from 'services/api';
+import { submitReview } from 'services/api';
 import { useNotification } from 'context/NotificationContext';
 
 const ProductPage = () => {
@@ -47,13 +47,21 @@ const ProductPage = () => {
 
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
-  const [reviewMessage, setReviewMessage] = useState('');
-  const [reviewError, setReviewError] = useState('');
+
+  const fetchProduct = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchProductById(id);
+      setProduct(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    // setReviewMessage(''); // Removed
-    // setReviewError(''); // Removed
 
     if (!reviewRating || !reviewComment) {
       showNotification('Please provide a rating and a comment.', 'error');
@@ -70,77 +78,6 @@ const ProductPage = () => {
       showNotification(err.message || 'Failed to submit review.', 'error');
     }
   };
-
-  const [qandas, setQandas] = useState([]);
-  const [newQuestion, setNewQuestion] = useState('');
-  const [newAnswer, setNewAnswer] = useState({}); // { questionId: answerText }
-
-  const fetchQandAForProduct = useCallback(async () => {
-    try {
-      const data = await fetchQandA(id);
-      setQandas(data);
-    } catch (err) {
-      console.error('Failed to fetch Q&A:', err);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (product) { // Only fetch Q&A if product is loaded
-      fetchQandAForProduct();
-    }
-  }, [product, fetchQandAForProduct]);
-
-  const handleAskQuestion = async (e) => {
-    e.preventDefault();
-    // setQandaMessage(''); // Removed
-    // setQandaError(''); // Removed
-
-    if (!newQuestion) {
-      showNotification('Question cannot be empty.', 'error');
-      return;
-    }
-
-    try {
-      await askQuestion(product._id, newQuestion);
-      showNotification('Question submitted successfully!', 'success');
-      setNewQuestion('');
-      fetchQandAForProduct(); // Re-fetch Q&A
-    } catch (err) {
-      showNotification(err.message || 'Failed to submit question.', 'error');
-    }
-  };
-
-  const handleAnswerQuestion = async (questionId) => {
-    // setQandaMessage(''); // Removed
-    // setQandaError(''); // Removed
-
-    const answerText = newAnswer[questionId];
-    if (!answerText) {
-      showNotification('Answer cannot be empty.', 'error');
-      return;
-    }
-
-    try {
-      await answerQuestion(questionId, answerText);
-      showNotification('Answer submitted successfully!', 'success');
-      setNewAnswer(prev => ({ ...prev, [questionId]: '' })); // Clear specific answer field
-      fetchQandAForProduct(); // Re-fetch Q&A
-    } catch (err) {
-      showNotification(err.message || 'Failed to submit answer.', 'error');
-    }
-  };
-
-  const fetchProduct = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await fetchProductById(id);
-      setProduct(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
 
   useEffect(() => {
     fetchProduct();
