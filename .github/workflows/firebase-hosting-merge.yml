@@ -11,9 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - name: Install Frontend Dependencies and Build
+        run: npm ci && npm run build
         working-directory: ./e-mart-frontend
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Install Backend Dependencies
+        run: npm ci
+        working-directory: ./functions
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_FIRST_FIREBASE_3D484 }}

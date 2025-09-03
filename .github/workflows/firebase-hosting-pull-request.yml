@@ -13,8 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - name: Install Frontend Dependencies and Build
+        run: npm ci && npm run build
         working-directory: ./e-mart-frontend
+      - name: Install Backend Dependencies
+        run: npm ci
+        working-directory: ./functions
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
