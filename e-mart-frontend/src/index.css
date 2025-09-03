@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Typography */
+h1 {
+  @apply text-4xl font-bold leading-tight text-text-light dark:text-dark_text-light;
+}
+
+h2 {
+  @apply text-3xl font-bold leading-tight text-text-light dark:text-dark_text-light;
+}
+
+h3 {
+  @apply text-2xl font-semibold leading-snug text-text-light dark:text-dark_text-light;
+}
+
+p {
+  @apply text-base text-text dark:text-dark_text leading-relaxed;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: theme('colors.background');
+  color: theme('colors.text.DEFAULT');
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0);
+  background-size: 20px 20px;
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-color: theme('colors.dark_background');
+  color: theme('colors.dark_text.DEFAULT');
+  background-image: radial-gradient(circle at 1px 1px, #475569 1px, transparent 0);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: theme('colors.surface');
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: theme('colors.dark_surface');
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
