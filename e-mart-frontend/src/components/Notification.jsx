@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNotification } from '../context/NotificationContext';
 
 const Notification = () => {

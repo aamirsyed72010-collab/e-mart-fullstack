@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 
 export const NotificationContext = createContext();
 
@@ -8,19 +8,18 @@ export const useNotification = () => {
 
 export const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState(null);
-  let timeoutId = null; // To store the timeout ID
+  const timeoutId = useRef(null);
 
   const showNotification = useCallback((message, type = 'info', duration = 3000) => {
-    // Clear any existing timeout to prevent multiple notifications overlapping
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
     }
 
     setNotification({ message, type });
 
-    timeoutId = setTimeout(() => {
+    timeoutId.current = setTimeout(() => {
       setNotification(null);
-      timeoutId = null; // Clear the stored ID after timeout
+      timeoutId.current = null;
     }, duration);
   }, []);
 

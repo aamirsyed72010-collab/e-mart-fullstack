@@ -144,7 +144,7 @@ const AccountPage = () => {
     setMessage('');
     setError('');
     try {
-      const updatedUser = await updateUserProfile(formData);
+      await updateUserProfile(formData);
       // Manually update user in AuthContext if needed, or rely on re-fetch
       // For simplicity, we'll just show a message and assume context updates on next render/login
       setMessage('Profile updated successfully!');
