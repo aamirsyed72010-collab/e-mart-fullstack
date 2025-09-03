@@ -3,7 +3,7 @@ import { useAuth } from 'context/AuthContext';
 import { updateUserProfile, fetchOrders, fetchSellerRequestStatus, fetchAdminRequestStatus, requestSellerRole, requestAdminRole } from 'services/api';
 
 const AccountPage = () => {
-  const { user, login } = useAuth(); // Get login function to refresh user data
+  const { user } = useAuth(); // Get login function to refresh user data
   const [formData, setFormData] = useState({
     displayName: '',
     shippingAddress: {
