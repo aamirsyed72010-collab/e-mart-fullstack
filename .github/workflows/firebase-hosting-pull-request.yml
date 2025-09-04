@@ -11,14 +11,13 @@ jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
       - name: Install Frontend Dependencies and Build
         run: npm ci && npm run build
         working-directory: ./e-mart-frontend
-      - name: Install Backend Dependencies
-        run: npm ci
-        working-directory: ./functions
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

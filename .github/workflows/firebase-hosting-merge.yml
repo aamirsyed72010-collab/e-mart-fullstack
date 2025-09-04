@@ -9,14 +9,13 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
       - name: Install Frontend Dependencies and Build
         run: npm ci && npm run build
         working-directory: ./e-mart-frontend
-      - name: Install Backend Dependencies
-        run: npm ci
-        working-directory: ./functions
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

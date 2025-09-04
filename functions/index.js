@@ -22,13 +22,8 @@ const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
 const app = express();
 
 // Initialize Firebase Admin SDK
-// Make sure your serviceAccountKey.json is in the root of your backend directory
-const serviceAccount = require('./serviceAccountKey.json'); 
-
 if (admin.apps.length === 0) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+  admin.initializeApp();
 }
 
 
@@ -115,7 +110,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Firebase ID token verification and session creation
-app.post('/auth/google/callback', async (req, res) => {
+app.post('/api/auth/google/callback', async (req, res) => {
   const idToken = req.headers.authorization?.split('Bearer ')[1];
 
   if (!idToken) {
@@ -187,13 +182,13 @@ app.post('/auth/google/callback', async (req, res) => {
 });
 
 // Define Routes
-app.use('/products', require('./routes/productRoutes'));
-app.use('/cart', require('./routes/cartRoutes'));
-app.use('/orders', require('./routes/orderRoutes'));
-app.use('/wishlist', require('./routes/wishlistRoutes'));
-app.use('/users', require('./routes/userRoutes'));
-app.use('/qanda', require('./routes/qandaRoutes'));
-app.use('/', adminRoutes); // Mount admin routes under /api
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/wishlist', require('./routes/wishlistRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/qanda', require('./routes/qandaRoutes'));
+app.use('/api', adminRoutes); // Mount admin routes under /api
 
 // Route to check if user is logged in
 app.get('/current_user', (req, res) => {

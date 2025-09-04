@@ -1,11 +1,10 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL.replace('/api', ''); // Remove /api from base URL
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
 
 const handleResponse = async (response) => {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ msg: 'Network response was not ok' }));
     throw new Error(errorData.msg || 'An unknown error occurred');
   }
-  // For 204 No Content, response.json() will fail, so we return a success indicator.
   if (response.status === 204) {
     return { success: true };
   }
@@ -14,7 +13,7 @@ const handleResponse = async (response) => {
 
 const apiRequest = async (url, options = {}) => {
   const response = await fetch(`${API_BASE_URL}${url}`, {
-    credentials: 'include', // Include cookies in all requests
+    credentials: 'include',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -25,12 +24,12 @@ const apiRequest = async (url, options = {}) => {
 };
 
 // AUTH
-export const getCurrentUser = () => apiRequest('/api/current_user'); // Add /api prefix
-export const googleCallback = (idToken) => apiRequest('/auth/google/callback', {
+export const getCurrentUser = () => apiRequest('/api/current_user');
+export const googleCallback = (idToken) => apiRequest('/api/auth/google/callback', {
   method: 'POST',
   headers: { 'Authorization': `Bearer ${idToken}` }
 });
-export const logout = () => apiRequest('/api/logout'); // Add /api prefix
+export const logout = () => apiRequest('/api/logout');
 
 
 // PRODUCTS
@@ -41,7 +40,7 @@ export const fetchProducts = (filters) => {
   if (filters.tags && filters.tags.length > 0) params.append('tags', filters.tags.join(','));
   if (filters.price_min) params.append('price_min', filters.price_min);
   if (filters.price_max) params.append('price_max', filters.price_max);
-  return apiRequest(`/api/products?${params.toString()}`); // Add /api prefix
+  return apiRequest(`/api/products?${params.toString()}`);
 };
 
 export const fetchSearchResults = (filters) => {
@@ -52,10 +51,10 @@ export const fetchSearchResults = (filters) => {
   if (filters.tags && filters.tags.length > 0) params.append('tags', filters.tags.join(','));
   if (filters.price_min) params.append('price_min', filters.price_min);
   if (filters.price_max) params.append('price_max', filters.price_max);
-  return apiRequest(`/api/products/search?${params.toString()}`); // Add /api prefix
+  return apiRequest(`/api/products/search?${params.toString()}`);
 };
-export const fetchProductById = (id) => apiRequest(`/api/products/${id}`); // Add /api prefix
-export const fetchRecommendations = (productId) => apiRequest(`/api/products/recommendations/${productId}`); // Add /api prefix
+export const fetchProductById = (id) => apiRequest(`/api/products/${id}`);
+export const fetchRecommendations = (productId) => apiRequest(`/api/products/recommendations/${productId}`);
 
 export const fetchProductsForComparison = (productIds) => {
   const idsString = productIds.join(',');
@@ -69,28 +68,28 @@ export const submitReview = (productId, rating, comment) => apiRequest(`/api/pro
 
 
 // SELLER
-export const fetchSellerProducts = () => apiRequest('/api/products/seller/my-products'); // Add /api prefix
-export const fetchAnalytics = () => apiRequest('/api/products/seller/analytics'); // Add /api prefix
-export const addProduct = (productData) => apiRequest('/api/products', { method: 'POST', body: JSON.stringify(productData) }); // Add /api prefix
-export const updateProduct = (productId, productData) => apiRequest(`/api/products/${productId}`, { method: 'PUT', body: JSON.stringify(productData) }); // Add /api prefix
-export const deleteProduct = (productId) => apiRequest(`/api/products/${productId}`, { method: 'DELETE' }); // Add /api prefix
+export const fetchSellerProducts = () => apiRequest('/api/products/seller/my-products');
+export const fetchAnalytics = () => apiRequest('/api/products/seller/analytics');
+export const addProduct = (productData) => apiRequest('/api/products', { method: 'POST', body: JSON.stringify(productData) });
+export const updateProduct = (productId, productData) => apiRequest(`/api/products/${productId}`, { method: 'PUT', body: JSON.stringify(productData) });
+export const deleteProduct = (productId) => apiRequest(`/api/products/${productId}`, { method: 'DELETE' });
 
 
 // CART
-export const fetchCart = () => apiRequest('/api/cart'); // Add /api prefix
-export const addToCart = (productId, quantity = 1) => apiRequest('/api/cart/add', { method: 'POST', body: JSON.stringify({ productId, quantity }) }); // Add /api prefix
-export const updateCartItemQuantity = (productId, quantity) => apiRequest(`/api/cart/update/${productId}`, { method: 'PUT', body: JSON.stringify({ quantity }) }); // Add /api prefix
-export const removeCartItem = (productId) => apiRequest(`/api/cart/remove/${productId}`, { method: 'DELETE' }); // Add /api prefix
+export const fetchCart = () => apiRequest('/api/cart');
+export const addToCart = (productId, quantity = 1) => apiRequest('/api/cart/add', { method: 'POST', body: JSON.stringify({ productId, quantity }) });
+export const updateCartItemQuantity = (productId, quantity) => apiRequest(`/api/cart/update/${productId}`, { method: 'PUT', body: JSON.stringify({ quantity }) });
+export const removeCartItem = (productId) => apiRequest(`/api/cart/remove/${productId}`, { method: 'DELETE' });
 
 
 // WISHLIST
-export const fetchWishlist = () => apiRequest('/api/wishlist'); // Add /api prefix
-export const addToWishlist = (productId) => apiRequest('/api/wishlist/add', { method: 'POST', body: JSON.stringify({ productId }) }); // Add /api prefix
-export const removeFromWishlist = (productId) => apiRequest(`/api/wishlist/remove/${productId}`, { method: 'DELETE' }); // Add /api prefix
+export const fetchWishlist = () => apiRequest('/api/wishlist');
+export const addToWishlist = (productId) => apiRequest('/api/wishlist/add', { method: 'POST', body: JSON.stringify({ productId }) });
+export const removeFromWishlist = (productId) => apiRequest(`/api/wishlist/remove/${productId}`, { method: 'DELETE' });
 
 
 // ORDERS
-export const placeOrder = (shippingAddress) => apiRequest('/api/orders', { method: 'POST', body: JSON.stringify({ shippingAddress }) }); // Add /api prefix
+export const placeOrder = (shippingAddress) => apiRequest('/api/orders', { method: 'POST', body: JSON.stringify({ shippingAddress }) });
 
 export const fetchOrders = () => apiRequest('/api/orders/my');
 
@@ -129,13 +128,13 @@ export const answerQuestion = (questionId, answer) => apiRequest(`/api/qanda/ans
 });
 
 // ADMIN
-export const fetchAdminRequests = () => apiRequest('/api/admin/admin-requests'); // Add /api prefix
-export const manageAdminRequest = (requestId, action) => apiRequest(`/api/admin/manage-admin-request/${requestId}`, { method: 'POST', body: JSON.stringify({ action }) }); // Add /api prefix
-export const fetchAdminProducts = () => apiRequest('/api/admin/products'); // Add /api prefix
-export const deleteAdminProduct = (productId) => apiRequest(`/api/admin/products/${productId}`, { method: 'DELETE' }); // Add /api prefix
-export const deleteAdminReview = (productId, reviewId) => apiRequest(`/api/admin/reviews/${productId}/${reviewId}`, { method: 'DELETE' }); // Add /api prefix
-export const fetchSellerRequests = () => apiRequest('/api/admin/seller-requests'); // Add /api prefix
-export const manageSellerRequest = (requestId, action) => apiRequest(`/api/admin/manage-seller-request/${requestId}`, { method: 'POST', body: JSON.stringify({ action }) }); // Add /api prefix
-export const fetchAdminUsers = () => apiRequest('/api/admin/users'); // Add /api prefix
-export const updateUserRole = (userId, role) => apiRequest(`/api/admin/users/${userId}/role`, { method: 'PUT', body: JSON.stringify({ role }) }); // Add /api prefix
-export const deleteUser = (userId) => apiRequest(`/api/admin/users/${userId}`, { method: 'DELETE' }); // Add /api prefix
+export const fetchAdminRequests = () => apiRequest('/api/admin/admin-requests');
+export const manageAdminRequest = (requestId, action) => apiRequest(`/api/admin/manage-admin-request/${requestId}`, { method: 'POST', body: JSON.stringify({ action }) });
+export const fetchAdminProducts = () => apiRequest('/api/admin/products');
+export const deleteAdminProduct = (productId) => apiRequest(`/api/admin/products/${productId}`, { method: 'DELETE' });
+export const deleteAdminReview = (productId, reviewId) => apiRequest(`/api/admin/reviews/${productId}/${reviewId}`, { method: 'DELETE' });
+export const fetchSellerRequests = () => apiRequest('/api/admin/seller-requests');
+export const manageSellerRequest = (requestId, action) => apiRequest(`/api/admin/manage-seller-request/${requestId}`, { method: 'POST', body: JSON.stringify({ action }) });
+export const fetchAdminUsers = () => apiRequest('/api/admin/users');
+export const updateUserRole = (userId, role) => apiRequest(`/api/admin/users/${userId}/role`, { method: 'PUT', body: JSON.stringify({ role }) });
+export const deleteUser = (userId) => apiRequest(`/api/admin/users/${userId}`, { method: 'DELETE' });
