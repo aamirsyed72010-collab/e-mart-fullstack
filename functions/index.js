@@ -239,4 +239,10 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ msg: message });
 });
 
-exports.api = functions.https.onRequest(app);
+// Start the server for standard Node.js hosting
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
+
+// exports.api = functions.https.onRequest(app);
