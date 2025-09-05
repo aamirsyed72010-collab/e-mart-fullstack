@@ -8,13 +8,23 @@ const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+
+// --- Configuration Loading ---
+let config;
+if (process.env.NODE_ENV === 'production') {
+  config = functions.config().env;
+} else {
+  require('dotenv').config();
+  config = process.env;
+}
 
 // Check for required environment variables
-if (!process.env.MONGO_URI || !process.env.SESSION_SECRET) {
-  console.error('FATAL ERROR: MONGO_URI and SESSION_SECRET must be defined in .env file');
+if (!config.MONGO_URI || !config.SESSION_SECRET) {
+  console.error('FATAL ERROR: MONGO_URI and SESSION_SECRET must be defined in your environment configuration.');
   process.exit(1);
 }
+// --- End Configuration Loading ---
+
 
 const User = require('./models/User'); // Import User model
 const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
@@ -26,9 +36,9 @@ if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 
-
 // Determine frontend URL based on environment
-const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL_PROD : process.env.FRONTEND_URL_DEV;
+const prodFrontendUrl = config.FRONTEND_URL_PROD || `https://${process.env.GCLOUD_PROJECT}.web.app`;
+const frontendUrl = process.env.NODE_ENV === 'production' ? prodFrontendUrl : config.FRONTEND_URL_DEV;
 console.log('Backend NODE_ENV:', process.env.NODE_ENV);
 console.log('Backend frontendUrl for CORS:', frontendUrl);
 
@@ -55,7 +65,7 @@ const apiLimiter = rateLimit({
 });
 
 // Apply to all requests that start with /api/
-// app.use('/api/', apiLimiter); // In a function, the base path is /api, so this might not be needed or needs adjustment.
+app.use('/api/', apiLimiter);
 
 // Specific limiter for authentication route
 const authLimiter = rateLimit({
@@ -67,11 +77,11 @@ const authLimiter = rateLimit({
 });
 
 // Apply the authentication limiter to the Google callback route
-app.use('/auth/google/callback', authLimiter);
+app.use('/api/auth/google/callback', authLimiter);
 
 // Configure session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET, // Use a strong secret from .env
+  secret: config.SESSION_SECRET, // Use a strong secret from .env
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -86,7 +96,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI).then(() => {
+mongoose.connect(config.MONGO_URI).then(() => {
     console.log('MongoDB connected successfully.');
 }).catch(error => {
     console.error('MongoDB connection failed:', error.message);
@@ -191,7 +201,7 @@ app.use('/api/qanda', require('./routes/qandaRoutes'));
 app.use('/api', adminRoutes); // Mount admin routes under /api
 
 // Route to check if user is logged in
-app.get('/current_user', (req, res) => {
+app.get('/api/current_user', (req, res) => {
   if (req.user) {
     res.json(req.user);
   } else {
@@ -201,7 +211,7 @@ app.get('/current_user', (req, res) => {
 });
 
 // Route to log out
-app.get('/logout', (req, res) => {
+app.get('/api/logout', (req, res, next) => {
   req.logout((err) => { // req.logout is added by passport
     if (err) { return next(err); }
     res.redirect(frontendUrl); // Redirect to frontend homepage
@@ -209,7 +219,7 @@ app.get('/logout', (req, res) => {
 });
 
 // A simple test route
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('E-Mart API is running!');
 });
 
