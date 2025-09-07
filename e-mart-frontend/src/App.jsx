@@ -11,6 +11,7 @@ import WishlistPage from './pages/public/WishlistPage';
 import ComparisonPage from './pages/public/ComparisonPage';
 import CheckoutPage from './pages/public/CheckoutPage';
 import SellerDashboardPage from './pages/seller/SellerDashboardPage';
+import InventoryManagementPage from './pages/seller/InventoryManagementPage';
 import AdminSellerRequestsPage from './pages/admin/AdminSellerRequestsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/account" element={<ProtectedRoute><AccountPage /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
             <Route path="/seller/dashboard" element={<ProtectedRoute sellerOnly={true}><SellerDashboardPage /></ProtectedRoute>} />
+            <Route path="/seller/inventory" element={<ProtectedRoute sellerOnly={true}><InventoryManagementPage /></ProtectedRoute>} />
             
             {/* Admin Routes */}
             <Route path="/admin/seller-requests" element={<ProtectedRoute adminOnly={true}><AdminSellerRequestsPage /></ProtectedRoute>} />

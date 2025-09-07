@@ -73,6 +73,7 @@ export const fetchAnalytics = () => apiRequest('/api/products/seller/analytics')
 export const addProduct = (productData) => apiRequest('/api/products', { method: 'POST', body: JSON.stringify(productData) });
 export const updateProduct = (productId, productData) => apiRequest(`/api/products/${productId}`, { method: 'PUT', body: JSON.stringify(productData) });
 export const deleteProduct = (productId) => apiRequest(`/api/products/${productId}`, { method: 'DELETE' });
+export const updateProductStock = (productId, stock) => apiRequest(`/api/products/seller/update-stock/${productId}`, { method: 'PUT', body: JSON.stringify({ stock }) });
 
 
 // CART

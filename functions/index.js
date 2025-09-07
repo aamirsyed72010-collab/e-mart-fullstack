@@ -88,7 +88,7 @@ app.use(session({
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-  }
+  },
 }));
 
 // Initialize Passport
@@ -97,10 +97,10 @@ app.use(passport.session());
 
 // Connect to MongoDB
 mongoose.connect(config.MONGO_URI).then(() => {
-    console.log('MongoDB connected successfully.');
-}).catch(error => {
-    console.error('MongoDB connection failed:', error.message);
-    process.exit(1);
+  console.log('MongoDB connected successfully.');
+}).catch((error) => {
+  console.error('MongoDB connection failed:', error.message);
+  process.exit(1);
 });
 
 
@@ -124,14 +124,14 @@ app.post('/api/auth/google/callback', async (req, res) => {
   const idToken = req.headers.authorization?.split('Bearer ')[1];
 
   if (!idToken) {
-    return res.status(401).json({ msg: 'No ID token provided' });
+    return res.status(401).json({msg: 'No ID token provided'});
   }
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const { uid, email, name, picture } = decodedToken;
+    const {uid, email, name, picture} = decodedToken;
 
-    let user = await User.findOne({ email: email });
+    let user = await User.findOne({email: email});
 
     if (!user) {
       // Create new user if not found
@@ -159,8 +159,8 @@ app.post('/api/auth/google/callback', async (req, res) => {
         user.role = 'user';
         needsSave = true;
       }
-      
-      
+
+
       // START: Development-only admin assignment for aamirsyed72010@gmail.com
       // WARNING: This should NOT be used in production environments due to security risks.
       // This is for the developer's convenience to automatically get admin access.
@@ -170,7 +170,7 @@ app.post('/api/auth/google/callback', async (req, res) => {
         console.log(`User ${user.email} role updated to admin (DEV ONLY).`);
       }
       // END: Development-only admin assignment
-      
+
       if (needsSave) {
         await user.save();
       }
@@ -180,14 +180,13 @@ app.post('/api/auth/google/callback', async (req, res) => {
     req.login(user, (err) => {
       if (err) {
         console.error('Error logging in user:', err);
-        return res.status(500).json({ msg: 'Failed to log in user' });
+        return res.status(500).json({msg: 'Failed to log in user'});
       }
-      res.status(200).json({ msg: 'Authentication successful', user: req.user });
+      res.status(200).json({msg: 'Authentication successful', user: req.user});
     });
-
   } catch (error) {
     console.error('Error verifying Firebase ID token:', error);
-    res.status(401).json({ msg: 'Unauthorized: Invalid ID token' });
+    res.status(401).json({msg: 'Unauthorized: Invalid ID token'});
   }
 });
 
@@ -213,7 +212,9 @@ app.get('/api/current_user', (req, res) => {
 // Route to log out
 app.get('/api/logout', (req, res, next) => {
   req.logout((err) => { // req.logout is added by passport
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     res.redirect(frontendUrl); // Redirect to frontend homepage
   });
 });
@@ -228,7 +229,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack); // Log the error stack for debugging
 
   // Default error status and message
-  let statusCode = err.statusCode || 500;
+  const statusCode = err.statusCode || 500;
   let message = err.message || 'Server Error';
 
   // In production, don't leak internal error details
@@ -236,7 +237,7 @@ app.use((err, req, res, next) => {
     message = 'An unexpected error occurred.';
   }
 
-  res.status(statusCode).json({ msg: message });
+  res.status(statusCode).json({msg: message});
 });
 
 // Start the server for standard Node.js hosting

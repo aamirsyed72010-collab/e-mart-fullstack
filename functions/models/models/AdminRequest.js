@@ -5,24 +5,24 @@ const adminRequestSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true // Each user can only have one pending request
+    unique: true, // Each user can only have one pending request
   },
   reason: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
     enum: ['pending', 'approved', 'denied'],
-    default: 'pending'
+    default: 'pending',
   },
   requestedAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   reviewedAt: {
-    type: Date
-  }
+    type: Date,
+  },
 });
 
 const AdminRequest = mongoose.model('AdminRequest', adminRequestSchema);

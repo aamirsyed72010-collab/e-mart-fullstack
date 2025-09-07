@@ -4,40 +4,40 @@ const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   displayName: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   profilePicture: {
     type: String,
   },
   shippingAddress: {
-    fullName: { type: String },
-    houseNo: { type: String }, // New field
-    streetName: { type: String }, // New field
-    address: { type: String }, // Keeping for general address line if needed
-    city: { type: String },
-    district: { type: String }, // New field
-    taluk: { type: String }, // New field
-    postalCode: { type: String },
-    country: { type: String }
+    fullName: {type: String},
+    houseNo: {type: String}, // New field
+    streetName: {type: String}, // New field
+    address: {type: String}, // Keeping for general address line if needed
+    city: {type: String},
+    district: {type: String}, // New field
+    taluk: {type: String}, // New field
+    postalCode: {type: String},
+    country: {type: String},
   },
   role: { // New role field
     type: String,
     enum: ['user', 'seller', 'admin'], // Define possible roles
-    default: 'user'
+    default: 'user',
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 const User = mongoose.model('User', userSchema);
