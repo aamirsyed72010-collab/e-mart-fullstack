@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const {check, validationResult} = require('express-validator');
-const SellerRequest = require('../models/SellerRequest');
-const User = require('../models/User');
-const Product = require('../models/Product');
-const AdminRequest = require('../models/AdminRequest');
-const {ensureAuthenticated, ensureRole} = require('../middleware/auth');
+const SellerRequest = require('../../models/models/SellerRequest');
+const User = require('../../models/models/User');
+const Product = require('../../models/models/Product');
+const AdminRequest = require('../../models/models/AdminRequest');
+const {ensureAuthenticated, ensureRole} = require('../../middleware/middleware/auth');
 
 
 // @route   POST /api/users/request-seller-role

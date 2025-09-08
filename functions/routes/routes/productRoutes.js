@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 const express = require('express');
 const router = express.Router();
-const Product = require('../models/Product');
-const {ensureAuthenticated, ensureRole} = require('../middleware/auth');
+const Product = require('../../models/models/Product');
+const {ensureAuthenticated, ensureRole} = require('../../middleware/middleware/auth');
 const {check, validationResult} = require('express-validator');
 
 // @route   GET api/products/search

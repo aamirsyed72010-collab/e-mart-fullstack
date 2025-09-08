@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Order = require('../models/Order');
-const CartItem = require('../models/Cart'); // To clear cart after order
-const Product = require('../models/Product'); // To get product details for order items
+const Order = require('../../models/models/Order');
+const CartItem = require('../../models/models/Cart'); // To clear cart after order
+const Product = require('../../models/models/Product'); // To get product details for order items
 const {check, validationResult} = require('express-validator');
-const {ensureAuthenticated, ensureRole} = require('../middleware/auth');
+const {ensureAuthenticated, ensureRole} = require('../../middleware/middleware/auth');
 
 // @route   POST /api/orders
 // @desc    Place a new order from the cart

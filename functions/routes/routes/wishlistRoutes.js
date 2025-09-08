@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {check, validationResult} = require('express-validator');
-const Wishlist = require('../models/Wishlist');
-const {ensureAuthenticated} = require('../middleware/auth');
+const Wishlist = require('../../models/models/Wishlist');
+const {ensureAuthenticated} = require('../../middleware/middleware/auth');
 
 // @route   GET api/wishlist
 // @desc    Get user's wishlist

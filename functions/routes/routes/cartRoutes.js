@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {check, validationResult} = require('express-validator');
-const CartItem = require('../models/Cart');
-const {ensureAuthenticated} = require('../middleware/auth');
+const CartItem = require('../../models/models/Cart');
+const {ensureAuthenticated} = require('../../middleware/middleware/auth');
 
 // @route   POST api/cart/add
 // @desc    Add an item to the cart

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const {check, validationResult} = require('express-validator');
-const QandA = require('../models/QandA');
+const QandA = require('../../models/models/QandA');
 
-const {ensureAuthenticated} = require('../middleware/auth');
+const {ensureAuthenticated} = require('../../middleware/middleware/auth');
 
 // @route   GET api/qanda/:productId
 // @desc    Get all Q&A for a product

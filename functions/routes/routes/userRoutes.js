@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../../models/models/User');
 const {check, validationResult} = require('express-validator');
-const {ensureAuthenticated} = require('../middleware/auth');
-const AdminRequest = require('../models/AdminRequest');
-const SellerRequest = require('../models/SellerRequest');
+const {ensureAuthenticated} = require('../../middleware/middleware/auth');
+const AdminRequest = require('../../models/models/AdminRequest');
+const SellerRequest = require('../../models/models/SellerRequest');
 
 // @route   PUT api/users/profile
 // @desc    Update user profile
