@@ -8,14 +8,13 @@ const cookieParser = require('cookie-parser');
 const admin = require('firebase-admin');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
 
 // --- Configuration Loading ---
 let config;
 if (process.env.NODE_ENV === 'production') {
   config = functions.config().env;
 } else {
-  require('dotenv').config({ path: path.join(__dirname, '.env') });
+  require('dotenv').config();
   config = process.env;
 }
 
@@ -27,8 +26,8 @@ if (!config.MONGO_URI || !config.SESSION_SECRET) {
 // --- End Configuration Loading ---
 
 
-const User = require('./models/models/User'); // Import User model
-const adminRoutes = require('./routes/routes/adminRoutes'); // Import admin routes
+const User = require('./models/User'); // Import User model
+const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
 
 const app = express();
 
@@ -122,7 +121,8 @@ passport.deserializeUser(async (id, done) => {
 
 // Firebase ID token verification and session creation
 app.post('/api/auth/google/callback', async (req, res) => {
-  const idToken = req.headers.authorization?.split('Bearer ')[1];
+  const authHeader = req.headers.authorization;
+  const idToken = authHeader && authHeader.split('Bearer ')[1];
 
   if (!idToken) {
     return res.status(401).json({msg: 'No ID token provided'});
@@ -192,12 +192,12 @@ app.post('/api/auth/google/callback', async (req, res) => {
 });
 
 // Define Routes
-app.use('/api/products', require('./routes/routes/productRoutes'));
-app.use('/api/cart', require('./routes/routes/cartRoutes'));
-app.use('/api/orders', require('./routes/routes/orderRoutes'));
-app.use('/api/wishlist', require('./routes/routes/wishlistRoutes'));
-app.use('/api/users', require('./routes/routes/userRoutes'));
-app.use('/api/qanda', require('./routes/routes/qandaRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/wishlist', require('./routes/wishlistRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/qanda', require('./routes/qandaRoutes'));
 app.use('/api', adminRoutes); // Mount admin routes under /api
 
 // Route to check if user is logged in
