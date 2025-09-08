@@ -26,3 +26,4 @@ serviceAccountKey.json
 # IDE settings
 .idea/
 .vscode/
+firebase-debug.log 
