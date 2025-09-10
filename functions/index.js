@@ -26,8 +26,8 @@ if (!config.MONGO_URI || !config.SESSION_SECRET) {
 // --- End Configuration Loading ---
 
 
-const User = require('./models/User'); // Import User model
-const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
+const User = require('./models/models/User'); // Import User model
+const adminRoutes = require('./routes/routes/adminRoutes'); // Import admin routes
 
 const app = express();
 
@@ -180,12 +180,12 @@ app.post('/api/auth/google/callback', async (req, res) => {
 });
 
 // Define Routes
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/cart', require('./routes/cartRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/wishlist', require('./routes/wishlistRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/qanda', require('./routes/qandaRoutes'));
+app.use('/api/products', require('./routes/routes/productRoutes'));
+app.use('/api/cart', require('./routes/routes/cartRoutes'));
+app.use('/api/orders', require('./routes/routes/orderRoutes'));
+app.use('/api/wishlist', require('./routes/routes/wishlistRoutes'));
+app.use('/api/users', require('./routes/routes/userRoutes'));
+app.use('/api/qanda', require('./routes/routes/qandaRoutes'));
 app.use('/api', adminRoutes); // Mount admin routes under /api
 
 // Route to check if user is logged in
