@@ -4,7 +4,7 @@ import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import SellerAnalytics from 'components/SellerAnalytics';
 import { allTags, allCategories } from 'constants/productConstants';
 import { fetchSellerProducts, fetchAnalytics, addProduct, updateProduct, deleteProduct } from 'services/api';
-import { Link } from 'react-router-dom';
+
 
 const SellerDashboardPage = () => {
   const [formData, setFormData] = useState({

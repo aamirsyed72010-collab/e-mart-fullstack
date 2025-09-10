@@ -17,6 +17,7 @@ root.render(
     <ThemeProvider>
       <NotificationProvider>
         <AuthProvider>
+          <Notification />
           <WishlistProvider>
             <ComparisonProvider>
               <CartProvider>
@@ -25,7 +26,6 @@ root.render(
             </ComparisonProvider>
           </WishlistProvider>
         </AuthProvider>
-        <Notification />
       </NotificationProvider>
     </ThemeProvider>
   </React.StrictMode>

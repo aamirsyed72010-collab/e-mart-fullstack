@@ -43,7 +43,7 @@ const ProductPage = () => {
     }
   };
 
-  const { user } = useAuth(); // Get user from auth context
+  const { user, login } = useAuth(); // Get user from auth context
 
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
@@ -212,7 +212,7 @@ const ProductPage = () => {
               </button>
             </form>
           ) : (
-            <p className="text-text-default dark:text-dark_text-default">Please <span className="text-primary cursor-pointer hover:underline" onClick={user.login}>log in</span> to write a review.</p>
+            <p className="text-text-default dark:text-dark_text-default">Please <span className="text-primary cursor-pointer hover:underline" onClick={login}>log in</span> to write a review.</p>
           )}
         </div>
       </div>

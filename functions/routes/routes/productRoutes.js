@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+
 const express = require('express');
 const router = express.Router();
 const Product = require('../../models/models/Product');
@@ -377,6 +377,7 @@ router.put('/:id',
           return res.status(401).json({msg: 'User not authorized'});
         }
 
+        const {name, description, price, imageUrl, category, tags, stock} = req.body;
         product = await Product.findByIdAndUpdate(
             req.params.id,
             {$set: {name, description, price, imageUrl, category, tags, stock}},

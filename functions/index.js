@@ -44,7 +44,7 @@ console.log('Backend frontendUrl for CORS:', frontendUrl);
 
 // Middleware
 app.use(cors({
-  origin: frontendUrl, // Allow frontend to access
+  origin: [frontendUrl, 'http://127.0.0.1:5000', 'http://localhost:5000'], // Allow frontend and emulators
   credentials: true, // Allow cookies to be sent
 }));
 app.use(express.json());
@@ -143,11 +143,7 @@ app.post('/api/auth/google/callback', async (req, res) => {
         profilePicture: picture,
         role: 'user', // Default role
       });
-      // Force 'admin' role for aamirsyed72010@gmail.com
-      if (user.email === 'aamirsyed72010@gmail.com') {
-        user.role = 'admin';
-        console.log(`New user ${user.email} created as admin.`);
-      }
+      
       await user.save();
     } else {
       // User exists, check if we need to update them.
@@ -162,15 +158,7 @@ app.post('/api/auth/google/callback', async (req, res) => {
       }
 
 
-      // START: Development-only admin assignment for aamirsyed72010@gmail.com
-      // WARNING: This should NOT be used in production environments due to security risks.
-      // This is for the developer's convenience to automatically get admin access.
-      if (email === 'aamirsyed72010@gmail.com' && user.role !== 'admin') {
-        user.role = 'admin';
-        needsSave = true;
-        console.log(`User ${user.email} role updated to admin (DEV ONLY).`);
-      }
-      // END: Development-only admin assignment
+      
 
       if (needsSave) {
         await user.save();
@@ -226,7 +214,7 @@ app.get('/api', (req, res) => {
 });
 
 // Centralized Error Handling Middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error(err.stack); // Log the error stack for debugging
 
   // Default error status and message
@@ -241,10 +229,5 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({msg: message});
 });
 
-// Start the server for standard Node.js hosting
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
 
 exports.api = functions.https.onRequest(app);
