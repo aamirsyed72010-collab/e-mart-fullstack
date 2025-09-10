@@ -180,13 +180,13 @@ app.post('/api/auth/google/callback', async (req, res) => {
 });
 
 // Define Routes
-app.use('/api/products', require('./routes/routes/productRoutes'));
-app.use('/api/cart', require('./routes/routes/cartRoutes'));
-app.use('/api/orders', require('./routes/routes/orderRoutes'));
-app.use('/api/wishlist', require('./routes/routes/wishlistRoutes'));
-app.use('/api/users', require('./routes/routes/userRoutes'));
-app.use('/api/qanda', require('./routes/routes/qandaRoutes'));
-app.use('/api', adminRoutes); // Mount admin routes under /api
+app.use('/products', require('./routes/routes/productRoutes'));
+app.use('/cart', require('./routes/routes/cartRoutes'));
+app.use('/orders', require('./routes/routes/orderRoutes'));
+app.use('/wishlist', require('./routes/routes/wishlistRoutes'));
+app.use('/users', require('./routes/routes/userRoutes'));
+app.use('/qanda', require('./routes/routes/qandaRoutes'));
+app.use('/', adminRoutes); // Mount admin routes under /
 
 // Route to check if user is logged in
 app.get('/api/current_user', (req, res) => {
