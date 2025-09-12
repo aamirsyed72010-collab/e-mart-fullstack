@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import LoadingSpinner from './LoadingSpinner';
 import { fetchRecommendations as apiFetchRecommendations } from 'services/api';
+import { Box, Grid, Typography } from '@mui/material';
 
 const Recommendations = ({ productId }) => {
   const [recommendations, setRecommendations] = useState([]);
@@ -34,14 +35,18 @@ const Recommendations = ({ productId }) => {
   }
 
   return (
-    <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-6 text-text-light dark:text-dark_text-light">You Might Also Like</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <Box sx={{ mt: 6 }}>
+      <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+        You Might Also Like
+      </Typography>
+      <Grid container spacing={3}>
         {recommendations.map(product => (
-          <ProductCard key={product._id} product={product} />
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+            <ProductCard product={product} />
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 };
 

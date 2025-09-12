@@ -1,26 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Base Typography */
-h1 {
-  @apply text-4xl font-bold leading-tight text-text-light dark:text-dark_text-light;
-}
-
-h2 {
-  @apply text-3xl font-bold leading-tight text-text-light dark:text-dark_text-light;
-}
-
-h3 {
-  @apply text-2xl font-semibold leading-snug text-text-light dark:text-dark_text-light;
-}
-
-p {
-  @apply text-base text-text dark:text-dark_text leading-relaxed;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -30,18 +9,6 @@ body {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: theme('colors.background');
-  color: theme('colors.text.DEFAULT');
-  transition: background-color 0.3s ease, color 0.3s ease;
-  background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0);
-  background-size: 20px 20px;
-  background-attachment: fixed;
-}
-
-.dark body {
-  background-color: theme('colors.dark_background');
-  color: theme('colors.dark_text.DEFAULT');
-  background-image: radial-gradient(circle at 1px 1px, #475569 1px, transparent 0);
 }
 
 code {
@@ -54,7 +21,7 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: theme('colors.surface');
+  background: #ffffff; /* surface from light theme */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -67,7 +34,7 @@ code {
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: theme('colors.dark_surface');
+  background: #2a2a4a;    /* dark_surface from dark theme */
 }
 
 .dark ::-webkit-scrollbar-thumb {

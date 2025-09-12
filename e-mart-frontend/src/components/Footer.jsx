@@ -1,70 +1,84 @@
 import React, { useState } from 'react';
+import { Box, Container, Grid, Typography, Link, IconButton, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { GitHub as GitHubIcon, LinkedIn as LinkedInIcon, Twitter as TwitterIcon, Instagram as InstagramIcon } from '@mui/icons-material';
 import EmailSelectionModal from './EmailSelectionModal';
-import { Link } from 'react-router-dom';
-import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <footer className="bg-surface text-text-dark py-12 mt-16 border-t border-gray-200 shadow-inner shadow-blue-100
-                   dark:bg-dark_surface dark:text-dark_text-dark dark:border-dark_surface/50 dark:shadow-dark_primary/10">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-          {/* Section 1: About */}
-          <div>
-            <h3 className="text-xl font-bold text-text-light mb-4 dark:text-dark_text-light">Customize</h3>
-            <p className="text-sm text-text-default dark:text-dark_text-default">
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: 'background.paper',
+        py: 6,
+        mt: 8,
+        borderTop: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={4} justifyContent="space-evenly">
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Customize
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
               Your ultimate destination for cutting-edge electronics and smart gadgets. Discover tomorrow's tech, today.
-            </p>
-          </div>
-
-          {/* Section 2: Quick Links */}
-          <div>
-            <h3 className="text-xl font-bold text-text-light mb-4 dark:text-dark_text-light">Quick Links</h3>
-            <ul className="space-y-2 text-sm text-text-default">
-              <li><Link to="/" className="hover:text-primary transition-colors dark:hover:text-dark_primary">Home</Link></li>
-              <li><Link to="/cart" className="hover:text-primary transition-colors dark:hover:text-dark_primary">Cart</Link></li>
-              <li><Link to="/account" className="hover:text-primary transition-colors dark:hover:text-dark_primary">Account</Link></li>
-              <li><Link to="/seller/dashboard" className="hover:text-primary transition-colors dark:hover:text-dark_primary">Seller Dashboard</Link></li> {/* Updated Link */}
-            </ul>
-          </div>
-
-          {/* Section 3: Connect */}
-          <div>
-            <h3 className="text-xl font-bold text-text-light mb-4 dark:text-dark_text-light">Connect</h3>
-            <div className="flex justify-center md:justify-start space-x-6 text-text-default">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors dark:hover:text-dark_primary">
-                <FaGithub size={24} />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors dark:hover:text-dark_primary">
-                <FaLinkedin size={24} />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors dark:hover:text-dark_primary">
-                <FaTwitter size={24} />
-              </a>
-              <a href="https://instagram.com/aamirsyed72010" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors dark:hover:text-dark_primary">
-                <FaInstagram size={24} />
-              </a>
-            </div>
-            <p className="text-sm mt-4 text-text-default">
-              Email: <button onClick={() => setIsModalOpen(true)} className="text-primary hover:underline focus:outline-none dark:text-dark_primary">aamirsyed72010@gmail.com</button>
-            </p>
-          </div>
-        </div>
-
-        <EmailSelectionModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          recipientEmail="aamirsyed72010@gmail.com"
-          subject="Inquiry from E-Mart Website"
-          body="Dear E-Mart Team,"
-        />
-
-        <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-text-default dark:border-dark_surface/50 dark:text-dark_text-default">
-          <p>&copy; 2025 Customize. All Rights Reserved.</p>
-        </div>
-      </div>
-    </footer>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Quick Links
+            </Typography>
+            <Link component={RouterLink} to="/" display="block" variant="body2" color="text.secondary">Home</Link>
+            <Link component={RouterLink} to="/cart" display="block" variant="body2" color="text.secondary">Cart</Link>
+            <Link component={RouterLink} to="/account" display="block" variant="body2" color="text.secondary">Account</Link>
+            <Link component={RouterLink} to="/seller/dashboard" display="block" variant="body2" color="text.secondary">Seller Dashboard</Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Connect
+            </Typography>
+            <Box>
+              <IconButton aria-label="github" color="inherit" component="a" href="https://github.com" target="_blank">
+                <GitHubIcon />
+              </IconButton>
+              <IconButton aria-label="linkedin" color="inherit" component="a" href="https://linkedin.com" target="_blank">
+                <LinkedInIcon />
+              </IconButton>
+              <IconButton aria-label="twitter" color="inherit" component="a" href="https://twitter.com" target="_blank">
+                <TwitterIcon />
+              </IconButton>
+              <IconButton aria-label="instagram" color="inherit" component="a" href="https://instagram.com/aamirsyed72010" target="_blank">
+                <InstagramIcon />
+              </IconButton>
+            </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Email:
+              <Button variant="text" onClick={() => setIsModalOpen(true)} sx={{ ml: 0.5 }}>
+                aamirsyed72010@gmail.com
+              </Button>
+            </Typography>
+          </Grid>
+        </Grid>
+        <Box mt={5}>
+          <Typography variant="body2" color="text.secondary" align="center">
+            {'© '}
+            {new Date().getFullYear()}
+            {' Customize. All Rights Reserved.'}
+          </Typography>
+        </Box>
+      </Container>
+      <EmailSelectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        recipientEmail="aamirsyed72010@gmail.com"
+        subject="Inquiry from E-Mart Website"
+        body="Dear E-Mart Team,"
+      />
+    </Box>
   );
 };
 

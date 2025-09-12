@@ -2,7 +2,21 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useComparison } from '../../context/ComparisonContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { fetchProductsForComparison } from '../../services/api';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Container,
+  Typography,
+  Paper,
+  Button,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Link,
+} from '@mui/material';
 
 const ComparisonPage = () => {
   const { comparisonList, removeFromCompare, clearCompareList } = useComparison();
@@ -34,99 +48,104 @@ const ComparisonPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Product Comparison</h1>
+      <Container sx={{ py: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Product Comparison
+        </Typography>
         <LoadingSpinner />
-      </div>
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-6 py-8 text-center text-red-500">
-        <p>Error: {error}</p>
-      </div>
+      <Container sx={{ py: 4, textAlign: 'center' }}>
+        <Typography color="error">Error: {error}</Typography>
+      </Container>
     );
   }
 
   if (products.length === 0) {
     return (
-      <div className="container mx-auto px-6 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Product Comparison</h1>
-        <div className="bg-surface/70 backdrop-blur-md rounded-xl p-8 shadow-xl shadow-blue-100 border border-gray-200
-                    dark:bg-dark_surface/70 dark:border-dark_surface/50 dark:shadow-dark_primary/10">
-          <p className="text-xl text-text-default mb-6 dark:text-dark_text-default">No products selected for comparison.</p>
-          <Link
-            to="/"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors duration-300
-                       dark:bg-dark_primary dark:hover:bg-dark_primary-dark">
+      <Container sx={{ py: 4, textAlign: 'center' }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Product Comparison
+        </Typography>
+        <Paper sx={{ p: 4, mt: 4 }}>
+          <Typography variant="h6" paragraph>
+            No products selected for comparison.
+          </Typography>
+          <Button component={RouterLink} to="/" variant="contained">
             Start Shopping
-          </Link>
-        </div>
-      </div>
+          </Button>
+        </Paper>
+      </Container>
     );
   }
 
-  // Extract all unique attributes from the products for comparison table headers
   const allAttributes = Array.from(new Set(products.flatMap(product => Object.keys(product))));
-  // Filter out attributes that are not useful for comparison or are objects/arrays
   const comparableAttributes = allAttributes.filter(attr => 
-    !['_id', '__v', 'seller', 'reviews', 'createdAt', 'updatedAt', 'views', 'sales'].includes(attr) &&
+    !['_id', '__v', 'seller', 'reviews', 'createdAt', 'updatedAt', 'views', 'sales', 'imageUrl', 'name']
+    .includes(attr) &&
     typeof products[0][attr] !== 'object'
-  ).sort(); // Sort alphabetically for consistent display
+  ).sort();
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Product Comparison</h1>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Product Comparison
+      </Typography>
       
-      <div className="mb-4 flex justify-end space-x-2">
+      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
         {products.length > 0 && (
-          <button
-            onClick={clearCompareList}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300"
-          >
+          <Button variant="contained" color="error" onClick={clearCompareList}>
             Clear All
-          </button>
+          </Button>
         )}
-      </div>
+      </Box>
 
-      <div className="overflow-x-auto bg-surface/70 backdrop-blur-md rounded-xl p-6 shadow-xl shadow-blue-100 border border-gray-200
-                  dark:bg-dark_surface/70 dark:border-dark_surface/50 dark:shadow-dark_primary/10">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-dark_surface/50">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-text-dark uppercase tracking-wider dark:text-dark_text-dark">Attribute</th>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Attribute</TableCell>
               {products.map(product => (
-                <th key={product._id} className="px-6 py-3 text-left text-xs font-medium text-text-dark uppercase tracking-wider dark:text-dark_text-dark">
-                  <div className="flex flex-col items-center">
-                    <img src={product.imageUrl} alt={product.name} className="w-24 h-24 object-cover rounded-lg mb-2" />
-                    <Link to={`/product/${product._id}`} className="text-sm font-bold text-primary hover:underline dark:text-dark_primary">{product.name}</Link>
-                    <button
-                      onClick={() => removeFromCompare(product._id)}
-                      className="text-red-500 hover:text-red-700 text-xs mt-1"
-                    >
+                <TableCell key={product._id} align="center">
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                    <Box
+                      component="img"
+                      src={product.imageUrl}
+                      alt={product.name}
+                      sx={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 1 }}
+                    />
+                    <Link component={RouterLink} to={`/product/${product._id}`} variant="subtitle2">
+                      {product.name}
+                    </Link>
+                    <Button size="small" color="error" onClick={() => removeFromCompare(product._id)}>
                       Remove
-                    </button>
-                  </div>
-                </th>
+                    </Button>
+                  </Box>
+                </TableCell>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-surface divide-y divide-gray-200 dark:bg-dark_surface dark:divide-dark_surface/50">
-            {comparableAttributes.map(attr => (
-              <tr key={attr}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-light dark:text-dark_text-light">{attr.charAt(0).toUpperCase() + attr.slice(1).replace(/([A-Z])/g, ' $1').trim()}</td>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {comparableAttributes.map((attr) => (
+              <TableRow key={attr}>
+                <TableCell component="th" scope="row">
+                  {attr.charAt(0).toUpperCase() + attr.slice(1).replace(/([A-Z])/g, ' $1').trim()}
+                </TableCell>
                 {products.map(product => (
-                  <td key={product._id} className="px-6 py-4 whitespace-nowrap text-sm text-text-default dark:text-dark_text-default">
+                  <TableCell key={product._id} align="center">
                     {attr === 'price' ? `$${product[attr].toFixed(2)}` : (Array.isArray(product[attr]) ? product[attr].join(', ') : product[attr])}
-                  </td>
+                  </TableCell>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 

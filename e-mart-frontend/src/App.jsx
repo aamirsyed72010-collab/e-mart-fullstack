@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Homepage from './pages/public/Homepage';
@@ -22,7 +23,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-background dark:bg-dark_background">
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
         <Header />
         <main className="flex-grow">
           <Routes>
@@ -48,7 +49,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
-      </div>
+      </Box>
     </Router>
   );
 }

@@ -44,7 +44,14 @@ console.log('Backend frontendUrl for CORS:', frontendUrl);
 
 // Middleware
 app.use(cors({
-  origin: [frontendUrl, 'http://127.0.0.1:5000', 'http://localhost:5000'], // Allow frontend and emulators
+  origin: function (origin, callback) {
+    const allowedOrigins = [frontendUrl, 'http://127.0.0.1:5000', 'http://localhost:5000', 'http://localhost:3000'];
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true, // Allow cookies to be sent
 }));
 app.use(express.json());
@@ -186,7 +193,7 @@ app.use('/orders', require('./routes/routes/orderRoutes'));
 app.use('/wishlist', require('./routes/routes/wishlistRoutes'));
 app.use('/users', require('./routes/routes/userRoutes'));
 app.use('/qanda', require('./routes/routes/qandaRoutes'));
-app.use('/', adminRoutes); // Mount admin routes under /
+app.use('/admin', adminRoutes); // Mount admin routes under /admin
 
 // Route to check if user is logged in
 app.get('/api/current_user', (req, res) => {

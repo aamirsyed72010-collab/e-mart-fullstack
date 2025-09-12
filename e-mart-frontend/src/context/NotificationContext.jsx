@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 export const NotificationContext = createContext();
 
@@ -8,24 +8,19 @@ export const useNotification = () => {
 
 export const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState(null);
-  const timeoutId = useRef(null);
 
-  const showNotification = useCallback((message, type = 'info', duration = 3000) => {
-    if (timeoutId.current) {
-      clearTimeout(timeoutId.current);
-    }
+  const showNotification = useCallback((message, type = 'info') => {
+    setNotification({ message, type, key: new Date().getTime() }); // Add a key to show same message again
+  }, []);
 
-    setNotification({ message, type });
-
-    timeoutId.current = setTimeout(() => {
-      setNotification(null);
-      timeoutId.current = null;
-    }, duration);
+  const hideNotification = useCallback(() => {
+    setNotification(null);
   }, []);
 
   const value = {
     notification,
     showNotification,
+    hideNotification,
   };
 
   return (

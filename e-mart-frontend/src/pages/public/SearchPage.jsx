@@ -5,6 +5,7 @@ import LoadingSpinner from 'components/LoadingSpinner';
 import FilterSidebar from 'components/FilterSidebar';
 import { fetchSearchResults } from 'services/api';
 import { allTags, allCategories } from 'constants/productConstants';
+import { Container, Grid, Typography } from '@mui/material';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -48,32 +49,38 @@ const SearchPage = () => {
   }, [loadSearchResults]);
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Search Results for "{filters.q}"</h1>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Search Results for "{filters.q}"
+      </Typography>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1">
+      <Grid container spacing={4}>
+        <Grid item xs={12} lg={3}>
           <FilterSidebar filters={filters} setFilters={setFilters} allTags={allTags} allCategories={allCategories} />
-        </div>
-        <main className="lg:col-span-3">
-          {loading && <LoadingSpinner />}
-          {error && <p className="text-center text-red-500">Error: {error}</p>}
-          {!loading && !error && (
-            <>
-              {products.length === 0 ? (
-                <p className="text-center text-text-default dark:text-dark_text-default">No products found matching your search.</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {products.map(product => (
-                    <ProductCard key={product._id} product={product} />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </main>
-      </div>
-    </div>
+        </Grid>
+        <Grid item xs={12} lg={9}>
+          <main>
+            {loading && <LoadingSpinner />}
+            {error && <Typography color="error" align="center">Error: {error}</Typography>}
+            {!loading && !error && (
+              <>
+                {products.length === 0 ? (
+                  <Typography align="center">No products found matching your search.</Typography>
+                ) : (
+                  <Grid container spacing={3}>
+                    {products.map(product => (
+                      <Grid item key={product._id} xs={12} sm={6} md={4}>
+                        <ProductCard product={product} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
+              </>
+            )}
+          </main>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

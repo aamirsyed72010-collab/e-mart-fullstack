@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
+import { Box } from '@mui/material';
 
 const ProtectedRoute = ({ children, adminOnly = false, sellerOnly = false }) => {
   const { user, loading } = useAuth();
@@ -9,9 +10,9 @@ const ProtectedRoute = ({ children, adminOnly = false, sellerOnly = false }) => 
 
   if (loading) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }}>
         <LoadingSpinner />
-      </div>
+      </Box>
     );
   }
 

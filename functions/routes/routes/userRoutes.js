@@ -92,4 +92,69 @@ router.get('/admin-request-status', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// @route   POST /api/users/request-seller-role
+// @desc    Submit a request to become a seller
+// @access  Private (Authenticated users only)
+router.post('/request-seller-role', ensureAuthenticated, async (req, res) => {
+  const {phoneNumber, address, desiredCategories} = req.body;
+
+  // Basic validation
+  if (!phoneNumber || !address || !desiredCategories || desiredCategories.length === 0) {
+    return res.status(400).json({msg: 'Please fill in all required fields for seller request.'});
+  }
+
+  try {
+    // Check if user already has a pending request
+    const existingRequest = await SellerRequest.findOne({user: req.user.id, status: 'pending'});
+    if (existingRequest) {
+      return res.status(400).json({msg: 'You already have a pending seller request.'});
+    }
+
+    // Create new seller request
+    const newRequest = new SellerRequest({
+      user: req.user.id,
+      phoneNumber,
+      address,
+      desiredCategories,
+      status: 'pending',
+    });
+
+    await newRequest.save();
+    res.status(201).json({msg: 'Seller request submitted successfully. Awaiting review.'});
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST /api/users/request-admin-role
+// @desc    Submit a request to become an admin
+// @access  Private (Authenticated users only)
+router.post('/request-admin-role', ensureAuthenticated, async (req, res) => {
+  const {reason} = req.body;
+
+  if (!reason) {
+    return res.status(400).json({msg: 'A reason is required to request admin role.'});
+  }
+
+  try {
+    const existingRequest = await AdminRequest.findOne({user: req.user.id, status: 'pending'});
+    if (existingRequest) {
+      return res.status(400).json({msg: 'You already have a pending admin request.'});
+    }
+
+    const newRequest = new AdminRequest({
+      user: req.user.id,
+      reason,
+      status: 'pending',
+    });
+
+    await newRequest.save();
+    res.status(201).json({msg: 'Admin request submitted successfully. Awaiting review.'});
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

@@ -5,6 +5,7 @@ import FilterSidebar from 'components/FilterSidebar';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { fetchProducts } from 'services/api';
 import { allTags, allCategories } from 'constants/productConstants';
+import { Container, Grid, Box, Typography, Button, Paper } from '@mui/material';
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -55,63 +56,80 @@ const Homepage = () => {
   };
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <motion.div
-        className="relative bg-surface/70 backdrop-blur-md rounded-2xl p-8 my-8 text-center shadow-2xl shadow-blue-100 border border-gray-200 overflow-hidden
-             dark:bg-dark_surface/70 dark:text-dark_text-default dark:shadow-dark_primary/20 dark:border-dark_surface/50"
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper
+        component={motion.div}
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
+        sx={{
+          position: 'relative',
+          p: 4,
+          my: 4,
+          textAlign: 'center',
+          overflow: 'hidden',
+          borderRadius: 4,
+        }}
       >
-        <motion.div
-          className="absolute inset-0 z-0"
+        <Box
+          component={motion.div}
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
             background: 'radial-gradient(circle at center, rgba(0,247,255,0.2) 0%, transparent 60%)',
-            y: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) // Background moves faster
+            y: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]),
           }}
-        ></motion.div>
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 text-text-light drop-shadow-lg
-                   dark:text-dark_text-light">
+        />
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
             Discover Tomorrow's Tech, Today.
-          </h1>
-          <p className="text-lg md:text-xl mb-8 text-text-default max-w-2xl mx-auto
-                  dark:text-dark_text-default">
+          </Typography>
+          <Typography variant="h5" color="text.secondary" paragraph>
             Explore cutting-edge electronics, smart devices, and gaming gear.
-          </p>
-          <button className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-100
-                       dark:bg-dark_primary dark:hover:bg-dark_primary-dark dark:shadow-dark_primary/30">
+          </Typography>
+          <Button variant="contained" size="large" sx={{ mt: 2 }}>
             Shop Now
-          </button>
-        </div>
-      </motion.div>
+          </Button>
+        </Box>
+      </Paper>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1">
+      <Grid container spacing={4}>
+        <Grid item xs={12} lg={3}>
           <FilterSidebar filters={filters} setFilters={setFilters} allTags={allTags} allCategories={allCategories} />
-        </div>
-        <main className="lg:col-span-3">
-          {loading && <LoadingSpinner />}
-          {error && <p className="text-center text-red-500">Error: {error}</p>}
-          {!loading && !error && (
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {products.length > 0 ? (
-                products.map(product => (
-                  <ProductCard key={product._id} product={product} itemVariants={itemVariants} />
-                ))
-              ) : (
-                <p className="text-center col-span-full text-text-default dark:text-dark_text-default">No products found matching your criteria.</p>
-              )}
-            </motion.div>
-          )}
-        </main>
-      </div>
-    </div>
+        </Grid>
+        <Grid item xs={12} lg={9}>
+          <main>
+            {loading && <LoadingSpinner />}
+            {error && <Typography color="error" align="center">Error: {error}</Typography>}
+            {!loading && !error && (
+              <motion.div
+                variants={sectionVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <Grid container spacing={3}>
+                  {products.length > 0 ? (
+                    products.map(product => (
+                      <Grid item key={product._id} xs={12} sm={6} md={4}>
+                        <ProductCard product={product} itemVariants={itemVariants} />
+                      </Grid>
+                    ))
+                  ) : (
+                    <Grid item xs={12}>
+                      <Typography align="center">No products found matching your criteria.</Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </motion.div>
+            )}
+          </main>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

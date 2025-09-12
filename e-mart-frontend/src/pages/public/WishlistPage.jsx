@@ -1,47 +1,56 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import LoadingSpinner from 'components/LoadingSpinner';
 import ProductCard from 'components/ProductCard';
 import { useWishlist } from 'context/WishlistContext';
+import { Container, Grid, Typography, Paper, Button } from '@mui/material';
 
 const WishlistPage = () => {
-  const { wishlistItems, loading, error } = useWishlist(); // Destructure error
+  const { wishlistItems, loading, error } = useWishlist();
 
   if (loading) {
     return (
-      <div className="container mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Your Wishlist</h1>
+      <Container sx={{ py: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Your Wishlist
+        </Typography>
         <LoadingSpinner />
-      </div>
+      </Container>
     );
   }
 
-  if (error) { // Display error if present
+  if (error) {
     return (
-      <div className="container mx-auto px-6 py-8 text-center text-red-500">
-        <p>Error: {error}</p>
-      </div>
+      <Container sx={{ py: 4, textAlign: 'center' }}>
+        <Typography color="error">Error: {error}</Typography>
+      </Container>
     );
   }
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-text-light dark:text-dark_text-light">Your Wishlist</h1>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Your Wishlist
+      </Typography>
       {wishlistItems.length === 0 ? (
-        <div className="text-center bg-surface/70 backdrop-blur-md rounded-xl p-8 shadow-xl">
-          <p className="text-xl text-text-default mb-6 dark:text-dark_text-default">Your wishlist is empty.</p>
-          <Link to="/" className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">
+        <Paper sx={{ p: 4, mt: 4, textAlign: 'center' }}>
+          <Typography variant="h6" paragraph>
+            Your wishlist is empty.
+          </Typography>
+          <Button component={RouterLink} to="/" variant="contained">
             Find products you'll love
-          </Link>
-        </div>
+          </Button>
+        </Paper>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <Grid container spacing={3}>
           {wishlistItems.map(item => (
-            <ProductCard key={item.product._id} product={item.product} />
+            <Grid item key={item.product._id} xs={12} sm={6} md={4} lg={3}>
+              <ProductCard product={item.product} />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       )}
-    </div>
+    </Container>
   );
 };
 

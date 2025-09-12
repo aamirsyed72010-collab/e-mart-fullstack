@@ -1,7 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { FiTrash2 } from 'react-icons/fi';
 import { fetchAdminUsers, updateUserRole, deleteUser } from '../../services/api';
+import {
+  Container,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Avatar,
+  Box,
+  Select,
+  MenuItem,
+  IconButton,
+  Alert,
+} from '@mui/material';
+import { Delete } from '@mui/icons-material';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -29,7 +46,7 @@ const AdminUsersPage = () => {
     try {
       await updateUserRole(userId, newRole);
       setMessage('User role updated successfully.');
-      fetchUsers(); // Refresh user list
+      fetchUsers();
     } catch (err) {
       setError(err.message);
     }
@@ -40,7 +57,7 @@ const AdminUsersPage = () => {
       try {
         await deleteUser(userId);
         setMessage('User deleted successfully.');
-        fetchUsers(); // Refresh user list
+        fetchUsers();
       } catch (err) {
         setError(err.message);
       }
@@ -48,50 +65,59 @@ const AdminUsersPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center text-text-light dark:text-dark_text-light">User Management</h1>
-      <div className="max-w-4xl mx-auto bg-surface/70 backdrop-blur-md p-8 rounded-xl shadow-xl shadow-blue-100 border border-gray-200
-                  dark:bg-dark_surface/70 dark:border-dark_surface/50 dark:shadow-dark_primary/10">
-        {message && <div className="bg-primary/20 border border-primary text-primary-dark px-4 py-3 rounded relative mb-4">{message}</div>}
-        {error && <div className="bg-secondary/20 border border-secondary text-secondary-dark px-4 py-3 rounded relative mb-4">{error}</div>}
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom align="center">
+        User Management
+      </Typography>
+      <Paper sx={{ p: 3 }}>
+        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         
         {loading ? <LoadingSpinner /> : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="border-b dark:border-dark_surface/50">
-                  <th className="text-left p-4 font-semibold text-text-light dark:text-dark_text-light">User</th>
-                  <th className="text-left p-4 font-semibold text-text-light dark:text-dark_text_light">Email</th>
-                  <th className="text-left p-4 font-semibold text-text-light dark:text-dark_text_light">Role</th>
-                  <th className="text-left p-4 font-semibold text-text-light dark:text-dark_text_light">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>User</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Role</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {users.map(user => (
-                  <tr key={user._id} className="border-b dark:border-dark_surface/50">
-                    <td className="p-4 flex items-center">
-                      <img src={user.profilePicture} alt={user.displayName} className="w-10 h-10 rounded-full mr-4" />
-                      {user.displayName}
-                    </td>
-                    <td className="p-4">{user.email}</td>
-                    <td className="p-4">
-                      <select value={user.role} onChange={(e) => handleRoleChange(user._id, e.target.value)} className="p-2 rounded-lg bg-surface/50 dark:bg-dark_surface/50 border border-gray-200 dark:border-dark_surface/50">
-                        <option value="user">User</option>
-                        <option value="seller">Seller</option>
-                        <option value="admin">Admin</option>
-                      </select>
-                    </td>
-                    <td className="p-4">
-                      <button onClick={() => handleDelete(user._id)} className="text-red-500 hover:text-red-700"><FiTrash2 size={20} /></button>
-                    </td>
-                  </tr>
+                  <TableRow key={user._id}>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar src={user.profilePicture} alt={user.displayName} sx={{ mr: 2 }} />
+                        <Typography>{user.displayName}</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <Select
+                        value={user.role}
+                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                        sx={{ minWidth: 120 }}
+                      >
+                        <MenuItem value="user">User</MenuItem>
+                        <MenuItem value="seller">Seller</MenuItem>
+                        <MenuItem value="admin">Admin</MenuItem>
+                      </Select>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton onClick={() => handleDelete(user._id)} color="error">
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
-      </div>
-    </div>
+      </Paper>
+    </Container>
   );
 };
 
