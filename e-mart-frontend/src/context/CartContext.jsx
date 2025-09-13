@@ -3,7 +3,7 @@ import {
   fetchCart as apiFetchCart,
   addToCart as apiAddToCart,
   updateCartItemQuantity as apiUpdateCartItemQuantity,
-  removeCartItem as apiRemoveCartItem
+  removeCartItem as apiRemoveCartItem,
 } from '../services/api';
 
 export const CartContext = createContext();

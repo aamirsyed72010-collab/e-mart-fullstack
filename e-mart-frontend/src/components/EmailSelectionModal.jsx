@@ -14,7 +14,13 @@ import {
 import { Mail as MailIcon } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 
-const EmailSelectionModal = ({ isOpen, onClose, recipientEmail, subject, body }) => {
+const EmailSelectionModal = ({
+  isOpen,
+  onClose,
+  recipientEmail,
+  subject,
+  body,
+}) => {
   const encodedSubject = encodeURIComponent(subject);
   const encodedBody = encodeURIComponent(body);
 
@@ -29,29 +35,47 @@ const EmailSelectionModal = ({ isOpen, onClose, recipientEmail, subject, body })
       <DialogContent>
         <List>
           <ListItem disablePadding>
-            <ListItemButton component="a" href={gmailUrl} target="_blank" rel="noopener noreferrer" onClick={onClose}>
+            <ListItemButton
+              component='a'
+              href={gmailUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              onClick={onClose}
+            >
               <ListItemIcon>
                 <GoogleIcon />
               </ListItemIcon>
-              <ListItemText primary="Open with Gmail" />
+              <ListItemText primary='Open with Gmail' />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton component="a" href={outlookUrl} target="_blank" rel="noopener noreferrer" onClick={onClose}>
-              <ListItemText primary="Open with Outlook" />
+            <ListItemButton
+              component='a'
+              href={outlookUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              onClick={onClose}
+            >
+              <ListItemText primary='Open with Outlook' />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton component="a" href={yahooUrl} target="_blank" rel="noopener noreferrer" onClick={onClose}>
-              <ListItemText primary="Open with Yahoo Mail" />
+            <ListItemButton
+              component='a'
+              href={yahooUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              onClick={onClose}
+            >
+              <ListItemText primary='Open with Yahoo Mail' />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton component="a" href={mailtoUrl} onClick={onClose}>
+            <ListItemButton component='a' href={mailtoUrl} onClick={onClose}>
               <ListItemIcon>
                 <MailIcon />
               </ListItemIcon>
-              <ListItemText primary="Use Default Email Client" />
+              <ListItemText primary='Use Default Email Client' />
             </ListItemButton>
           </ListItem>
         </List>

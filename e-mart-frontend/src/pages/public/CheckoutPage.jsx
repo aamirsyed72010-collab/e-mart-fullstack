@@ -44,9 +44,13 @@ const CheckoutPage = () => {
 
   const handleNext = (e) => {
     e.preventDefault();
-    if (Object.values(shippingDetails).some(detail => detail === '' && detail !== shippingDetails.address)) {
-        alert('Please fill in all required shipping details.');
-        return;
+    if (
+      Object.values(shippingDetails).some(
+        (detail) => detail === '' && detail !== shippingDetails.address
+      )
+    ) {
+      alert('Please fill in all required shipping details.');
+      return;
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -72,24 +76,32 @@ const CheckoutPage = () => {
     }
   };
 
-  const total = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0
+  );
 
   function getStepContent(step) {
     switch (step) {
       case 0:
         return (
-          <Box component="form" onSubmit={handleNext}>
-            <Alert severity="warning" sx={{ mb: 2 }}>
+          <Box component='form' onSubmit={handleNext}>
+            <Alert severity='warning' sx={{ mb: 2 }}>
               Currently, our services are exclusively available within India.
             </Alert>
-            <Typography variant="h6" gutterBottom>Shipping Details</Typography>
+            <Typography variant='h6' gutterBottom>
+              Shipping Details
+            </Typography>
             <Grid container spacing={2}>
               {Object.keys(shippingDetails).map((key) => (
                 <Grid item xs={12} sm={6} key={key}>
                   <TextField
                     required={key !== 'address'}
                     fullWidth
-                    label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                    label={
+                      key.charAt(0).toUpperCase() +
+                      key.slice(1).replace(/([A-Z])/g, ' $1')
+                    }
                     name={key}
                     value={shippingDetails[key]}
                     onChange={handleChange}
@@ -98,7 +110,7 @@ const CheckoutPage = () => {
               ))}
             </Grid>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-              <Button type="submit" variant="contained">
+              <Button type='submit' variant='contained'>
                 Next
               </Button>
             </Box>
@@ -107,33 +119,46 @@ const CheckoutPage = () => {
       case 1:
         return (
           <>
-            <Typography variant="h6" gutterBottom>Order Summary</Typography>
+            <Typography variant='h6' gutterBottom>
+              Order Summary
+            </Typography>
             <List disablePadding>
               {cartItems.map((item) => (
                 <ListItem key={item.product._id} sx={{ py: 1, px: 0 }}>
-                  <ListItemText primary={item.product.name} secondary={`Quantity: ${item.quantity}`} />
-                  <Typography variant="body2">${(item.product.price * item.quantity).toFixed(2)}</Typography>
+                  <ListItemText
+                    primary={item.product.name}
+                    secondary={`Quantity: ${item.quantity}`}
+                  />
+                  <Typography variant='body2'>
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </Typography>
                 </ListItem>
               ))}
               <Divider />
               <ListItem sx={{ py: 1, px: 0 }}>
-                <ListItemText primary="Total" />
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                <ListItemText primary='Total' />
+                <Typography variant='subtitle1' sx={{ fontWeight: 700 }}>
                   ${total.toFixed(2)}
                 </Typography>
               </ListItem>
             </List>
             <Divider sx={{ my: 2 }} />
-            <Typography variant="h6" gutterBottom>Shipping To:</Typography>
+            <Typography variant='h6' gutterBottom>
+              Shipping To:
+            </Typography>
             <Typography gutterBottom>{shippingDetails.fullName}</Typography>
-            <Typography gutterBottom>{shippingDetails.houseNo}, {shippingDetails.streetName}</Typography>
-            <Typography gutterBottom>{shippingDetails.city}, {shippingDetails.postalCode}</Typography>
+            <Typography gutterBottom>
+              {shippingDetails.houseNo}, {shippingDetails.streetName}
+            </Typography>
+            <Typography gutterBottom>
+              {shippingDetails.city}, {shippingDetails.postalCode}
+            </Typography>
             <Typography gutterBottom>{shippingDetails.country}</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-              <Button onClick={handleBack}>
-                Back
-              </Button>
-              <Button variant="contained" onClick={handlePlaceOrder}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}
+            >
+              <Button onClick={handleBack}>Back</Button>
+              <Button variant='contained' onClick={handlePlaceOrder}>
                 Place Order
               </Button>
             </Box>
@@ -145,9 +170,12 @@ const CheckoutPage = () => {
   }
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-      <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-        <Typography component="h1" variant="h4" align="center">
+    <Container component='main' maxWidth='sm' sx={{ mb: 4 }}>
+      <Paper
+        variant='outlined'
+        sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+      >
+        <Typography component='h1' variant='h4' align='center'>
           Checkout
         </Typography>
         <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>

@@ -32,7 +32,7 @@ const InventoryManagementPage = () => {
       const data = await fetchSellerProducts();
       setProducts(data);
       const initialStock = {};
-      data.forEach(p => {
+      data.forEach((p) => {
         initialStock[p._id] = p.stock;
       });
       setStockLevels(initialStock);
@@ -48,9 +48,9 @@ const InventoryManagementPage = () => {
   }, [loadSellerProducts]);
 
   const handleStockChange = (productId, value) => {
-    setStockLevels(prev => ({
+    setStockLevels((prev) => ({
       ...prev,
-      [productId]: value
+      [productId]: value,
     }));
   };
 
@@ -72,44 +72,57 @@ const InventoryManagementPage = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+      <Typography variant='h4' component='h1' gutterBottom align='center'>
         Inventory Management
       </Typography>
       <Paper sx={{ p: 3 }}>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        
-        {loading ? <LoadingSpinner /> : (
+        {error && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
           <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Product</TableCell>
-                  <TableCell align="right">Current Stock</TableCell>
-                  <TableCell align="center">Update Stock</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align='right'>Current Stock</TableCell>
+                  <TableCell align='center'>Update Stock</TableCell>
+                  <TableCell align='center'>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {products.map(product => (
+                {products.map((product) => (
                   <TableRow key={product._id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar src={product.imageUrl} alt={product.name} variant="square" sx={{ mr: 2 }} />
+                        <Avatar
+                          src={product.imageUrl}
+                          alt={product.name}
+                          variant='square'
+                          sx={{ mr: 2 }}
+                        />
                         <Typography>{product.name}</Typography>
                       </Box>
                     </TableCell>
-                    <TableCell align="right">{product.stock}</TableCell>
-                    <TableCell align="center">
-                      <TextField 
-                        type="number"
+                    <TableCell align='right'>{product.stock}</TableCell>
+                    <TableCell align='center'>
+                      <TextField
+                        type='number'
                         value={stockLevels[product._id] || ''}
-                        onChange={(e) => handleStockChange(product._id, e.target.value)}
+                        onChange={(e) =>
+                          handleStockChange(product._id, e.target.value)
+                        }
                         sx={{ width: '100px' }}
                       />
                     </TableCell>
-                    <TableCell align="center">
-                      <Button 
-                        variant="contained"
+                    <TableCell align='center'>
+                      <Button
+                        variant='contained'
                         onClick={() => handleUpdateStock(product._id)}
                       >
                         Update

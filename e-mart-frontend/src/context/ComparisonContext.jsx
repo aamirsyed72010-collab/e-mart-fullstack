@@ -12,7 +12,7 @@ export const ComparisonProvider = ({ children }) => {
       const localData = localStorage.getItem('comparisonList');
       return localData ? JSON.parse(localData) : [];
     } catch (error) {
-      console.error("Could not parse comparison list from localStorage", error);
+      console.error('Could not parse comparison list from localStorage', error);
       return [];
     }
   });
@@ -22,7 +22,7 @@ export const ComparisonProvider = ({ children }) => {
   }, [comparisonList]);
 
   const addToCompare = (productId) => {
-    setComparisonList(prevList => {
+    setComparisonList((prevList) => {
       if (prevList.includes(productId)) {
         return prevList; // Already in the list
       }
@@ -35,7 +35,7 @@ export const ComparisonProvider = ({ children }) => {
   };
 
   const removeFromCompare = (productId) => {
-    setComparisonList(prevList => prevList.filter(id => id !== productId));
+    setComparisonList((prevList) => prevList.filter((id) => id !== productId));
   };
 
   const clearCompareList = () => {
@@ -55,5 +55,9 @@ export const ComparisonProvider = ({ children }) => {
     comparisonCount: comparisonList.length,
   };
 
-  return <ComparisonContext.Provider value={value}>{children}</ComparisonContext.Provider>;
+  return (
+    <ComparisonContext.Provider value={value}>
+      {children}
+    </ComparisonContext.Provider>
+  );
 };

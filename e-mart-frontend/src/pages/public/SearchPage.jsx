@@ -31,7 +31,7 @@ const SearchPage = () => {
     if (filters.tags.length > 0) params.append('tags', filters.tags.join(','));
     if (filters.price_min) params.append('price_min', filters.price_min);
     if (filters.price_max) params.append('price_max', filters.price_max);
-    
+
     setSearchParams(params); // Update URL
 
     try {
@@ -50,25 +50,36 @@ const SearchPage = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant='h4' component='h1' gutterBottom>
         Search Results for "{filters.q}"
       </Typography>
-      
+
       <Grid container spacing={4}>
         <Grid item xs={12} lg={3}>
-          <FilterSidebar filters={filters} setFilters={setFilters} allTags={allTags} allCategories={allCategories} />
+          <FilterSidebar
+            filters={filters}
+            setFilters={setFilters}
+            allTags={allTags}
+            allCategories={allCategories}
+          />
         </Grid>
         <Grid item xs={12} lg={9}>
           <main>
             {loading && <LoadingSpinner />}
-            {error && <Typography color="error" align="center">Error: {error}</Typography>}
+            {error && (
+              <Typography color='error' align='center'>
+                Error: {error}
+              </Typography>
+            )}
             {!loading && !error && (
               <>
                 {products.length === 0 ? (
-                  <Typography align="center">No products found matching your search.</Typography>
+                  <Typography align='center'>
+                    No products found matching your search.
+                  </Typography>
                 ) : (
                   <Grid container spacing={3}>
-                    {products.map(product => (
+                    {products.map((product) => (
                       <Grid item key={product._id} xs={12} sm={6} md={4}>
                         <ProductCard product={product} />
                       </Grid>

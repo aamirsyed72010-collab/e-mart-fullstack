@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { fetchSellerRequests as apiFetchSellerRequests, manageSellerRequest } from '../../services/api';
+import {
+  fetchSellerRequests as apiFetchSellerRequests,
+  manageSellerRequest,
+} from '../../services/api';
 import {
   Container,
   Paper,
@@ -50,37 +53,64 @@ const AdminSellerRequestsPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth='md' sx={{ py: 4 }}>
+      <Typography variant='h4' component='h1' gutterBottom align='center'>
         Admin Dashboard
       </Typography>
       <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant='h5' gutterBottom>
           Pending Seller Requests
         </Typography>
-        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-        {errorRequests && <Alert severity="error" sx={{ mb: 2 }}>{errorRequests}</Alert>}
+        {message && (
+          <Alert severity='success' sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+        {errorRequests && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {errorRequests}
+          </Alert>
+        )}
 
         {loadingRequests ? (
           <LoadingSpinner />
         ) : requests.length === 0 ? (
           <Typography>No pending seller requests.</Typography>
         ) : (
-          requests.map(request => (
+          requests.map((request) => (
             <Accordion key={request._id}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{request.user.displayName} ({request.user.email})</Typography>
+                <Typography>
+                  {request.user.displayName} ({request.user.email})
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography variant="body2">Phone: {request.phoneNumber}</Typography>
-                <Typography variant="body2">Address: {request.address}</Typography>
-                <Typography variant="body2">Categories: {request.desiredCategories.join(', ')}</Typography>
-                <Typography variant="caption">Requested: {new Date(request.requestedAt).toLocaleDateString()}</Typography>
+                <Typography variant='body2'>
+                  Phone: {request.phoneNumber}
+                </Typography>
+                <Typography variant='body2'>
+                  Address: {request.address}
+                </Typography>
+                <Typography variant='body2'>
+                  Categories: {request.desiredCategories.join(', ')}
+                </Typography>
+                <Typography variant='caption'>
+                  Requested:{' '}
+                  {new Date(request.requestedAt).toLocaleDateString()}
+                </Typography>
                 <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                  <Button variant="contained" color="success" onClick={() => handleManageRequest(request._id, 'approved')}>
+                  <Button
+                    variant='contained'
+                    color='success'
+                    onClick={() => handleManageRequest(request._id, 'approved')}
+                  >
                     Approve
                   </Button>
-                  <Button variant="contained" color="error" onClick={() => handleManageRequest(request._id, 'denied')}>
+                  <Button
+                    variant='contained'
+                    color='error'
+                    onClick={() => handleManageRequest(request._id, 'denied')}
+                  >
                     Deny
                   </Button>
                 </Box>

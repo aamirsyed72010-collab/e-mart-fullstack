@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import {
   fetchWishlist as apiFetchWishlist,
   addToWishlist as apiAddToWishlist,
-  removeFromWishlist as apiRemoveFromWishlist
+  removeFromWishlist as apiRemoveFromWishlist,
 } from '../services/api';
 
 export const WishlistContext = createContext();
@@ -59,7 +59,9 @@ export const WishlistProvider = ({ children }) => {
   };
 
   const isProductInWishlist = (productId) => {
-    return wishlistItems.some(item => item.product && item.product._id === productId);
+    return wishlistItems.some(
+      (item) => item.product && item.product._id === productId
+    );
   };
 
   const value = {
@@ -73,5 +75,9 @@ export const WishlistProvider = ({ children }) => {
     fetchWishlist: getWishlist, // Expose refetch function
   };
 
-  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
+  return (
+    <WishlistContext.Provider value={value}>
+      {children}
+    </WishlistContext.Provider>
+  );
 };

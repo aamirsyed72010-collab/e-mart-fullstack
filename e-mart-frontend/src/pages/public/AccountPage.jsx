@@ -185,47 +185,63 @@ const AccountPage = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant='h4' component='h1' gutterBottom>
         My Account
       </Typography>
       <Paper sx={{ p: 3, mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           {user.profilePicture && (
-            <Avatar src={user.profilePicture} sx={{ width: 80, height: 80, mr: 2 }} />
+            <Avatar
+              src={user.profilePicture}
+              sx={{ width: 80, height: 80, mr: 2 }}
+            />
           )}
           <Box>
-            <Typography variant="h5">{user.displayName}</Typography>
-            <Typography color="text.secondary">{user.email}</Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant='h5'>{user.displayName}</Typography>
+            <Typography color='text.secondary'>{user.email}</Typography>
+            <Typography variant='body2' color='text.secondary'>
               Role: {user.role}
             </Typography>
           </Box>
         </Box>
 
-        <Typography variant="h6" gutterBottom>
+        <Typography variant='h6' gutterBottom>
           Update Profile
         </Typography>
-        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        <Box component="form" onSubmit={handleSubmit}>
+        {message && (
+          <Alert severity='success' sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+        {error && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        <Box component='form' onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Display Name"
-                name="displayName"
+                label='Display Name'
+                name='displayName'
                 value={formData.displayName}
                 onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom>Shipping Address</Typography>
+              <Typography variant='subtitle1' gutterBottom>
+                Shipping Address
+              </Typography>
             </Grid>
             {Object.keys(formData.shippingAddress).map((key) => (
               <Grid item xs={12} sm={6} key={key}>
                 <TextField
                   fullWidth
-                  label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                  label={
+                    key.charAt(0).toUpperCase() +
+                    key.slice(1).replace(/([A-Z])/g, ' $1')
+                  }
                   name={`shippingAddress.${key}`}
                   value={formData.shippingAddress[key]}
                   onChange={handleChange}
@@ -233,7 +249,7 @@ const AccountPage = () => {
               </Grid>
             ))}
             <Grid item xs={12}>
-              <Button type="submit" variant="contained">
+              <Button type='submit' variant='contained'>
                 Save Profile
               </Button>
             </Grid>
@@ -242,12 +258,20 @@ const AccountPage = () => {
       </Paper>
 
       <Paper sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant='h6' gutterBottom>
           Role Request Management
         </Typography>
-        {requestMessage && <Alert severity="success" sx={{ mb: 2 }}>{requestMessage}</Alert>}
-        {requestError && <Alert severity="error" sx={{ mb: 2 }}>{requestError}</Alert>}
-        
+        {requestMessage && (
+          <Alert severity='success' sx={{ mb: 2 }}>
+            {requestMessage}
+          </Alert>
+        )}
+        {requestError && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {requestError}
+          </Alert>
+        )}
+
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>Seller Role Request</Typography>
@@ -260,24 +284,62 @@ const AccountPage = () => {
             ) : sellerRequestStatus === 'approved' ? (
               <Typography>Your seller request has been approved.</Typography>
             ) : (
-              <Box component="form" onSubmit={handleSellerRequestSubmit}>
+              <Box component='form' onSubmit={handleSellerRequestSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <TextField fullWidth label="Phone Number" name="phoneNumber" value={sellerRequestForm.phoneNumber} onChange={handleSellerRequestFormChange} required />
+                    <TextField
+                      fullWidth
+                      label='Phone Number'
+                      name='phoneNumber'
+                      value={sellerRequestForm.phoneNumber}
+                      onChange={handleSellerRequestFormChange}
+                      required
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField fullWidth multiline rows={2} label="Address" name="address" value={sellerRequestForm.address} onChange={handleSellerRequestFormChange} required />
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={2}
+                      label='Address'
+                      name='address'
+                      value={sellerRequestForm.address}
+                      onChange={handleSellerRequestFormChange}
+                      required
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <Typography>Desired Categories</Typography>
                     <FormGroup>
-                      {['Electronics', 'Audio', 'Computers', 'Accessories', 'Gaming', 'Home Appliances', 'Smart Home'].map(cat => (
-                        <FormControlLabel control={<Checkbox value={cat} checked={sellerRequestForm.desiredCategories.includes(cat)} onChange={handleSellerCategoriesChange} />} label={cat} key={cat} />
+                      {[
+                        'Electronics',
+                        'Audio',
+                        'Computers',
+                        'Accessories',
+                        'Gaming',
+                        'Home Appliances',
+                        'Smart Home',
+                      ].map((cat) => (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              value={cat}
+                              checked={sellerRequestForm.desiredCategories.includes(
+                                cat
+                              )}
+                              onChange={handleSellerCategoriesChange}
+                            />
+                          }
+                          label={cat}
+                          key={cat}
+                        />
                       ))}
                     </FormGroup>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button type="submit" variant="contained">Request Seller Role</Button>
+                    <Button type='submit' variant='contained'>
+                      Request Seller Role
+                    </Button>
                   </Grid>
                 </Grid>
               </Box>
@@ -297,13 +359,23 @@ const AccountPage = () => {
             ) : adminRequestStatus === 'approved' ? (
               <Typography>Your admin request has been approved.</Typography>
             ) : (
-              <Box component="form" onSubmit={handleAdminRequestSubmit}>
+              <Box component='form' onSubmit={handleAdminRequestSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <TextField fullWidth multiline rows={3} label="Reason for Admin Role" value={adminRequestReason} onChange={(e) => setAdminRequestReason(e.target.value)} required />
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label='Reason for Admin Role'
+                      value={adminRequestReason}
+                      onChange={(e) => setAdminRequestReason(e.target.value)}
+                      required
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <Button type="submit" variant="contained">Request Admin Role</Button>
+                    <Button type='submit' variant='contained'>
+                      Request Admin Role
+                    </Button>
                   </Grid>
                 </Grid>
               </Box>
@@ -313,7 +385,7 @@ const AccountPage = () => {
       </Paper>
 
       <Paper sx={{ p: 3 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant='h6' gutterBottom>
           Order History
         </Typography>
         {ordersLoading ? (
@@ -324,16 +396,24 @@ const AccountPage = () => {
           orders.map((order) => (
             <Accordion key={order._id}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Order ID: {order._id} - Status: {order.status}</Typography>
+                <Typography>
+                  Order ID: {order._id} - Status: {order.status}
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>Date: {new Date(order.createdAt).toLocaleDateString()}</Typography>
+                <Typography>
+                  Date: {new Date(order.createdAt).toLocaleDateString()}
+                </Typography>
                 <Typography>Total: ${order.totalAmount.toFixed(2)}</Typography>
                 <List>
                   {order.items.map((item) => (
                     <ListItem key={item._id}>
                       <ListItemAvatar>
-                        <Avatar src={item.product.imageUrl} alt={item.product.name} variant="square" />
+                        <Avatar
+                          src={item.product.imageUrl}
+                          alt={item.product.name}
+                          variant='square'
+                        />
                       </ListItemAvatar>
                       <ListItemText
                         primary={item.product.name}

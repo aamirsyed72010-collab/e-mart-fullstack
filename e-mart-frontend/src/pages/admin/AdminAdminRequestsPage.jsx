@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { fetchAdminRequests as apiFetchAdminRequests, manageAdminRequest } from '../../services/api';
+import {
+  fetchAdminRequests as apiFetchAdminRequests,
+  manageAdminRequest,
+} from '../../services/api';
 import {
   Container,
   Paper,
@@ -49,32 +52,55 @@ const AdminAdminRequestsPage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Container maxWidth='md' sx={{ py: 4 }}>
+      <Typography variant='h4' component='h1' gutterBottom align='center'>
         Manage Admin Requests
       </Typography>
       <Paper sx={{ p: 3 }}>
-        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-        {errorRequests && <Alert severity="error" sx={{ mb: 2 }}>{errorRequests}</Alert>}
-        
+        {message && (
+          <Alert severity='success' sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+        {errorRequests && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {errorRequests}
+          </Alert>
+        )}
+
         {loadingRequests ? (
           <LoadingSpinner />
         ) : requests.length === 0 ? (
           <Typography>No pending admin requests.</Typography>
         ) : (
-          requests.map(request => (
+          requests.map((request) => (
             <Accordion key={request._id}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{request.user.displayName} ({request.user.email})</Typography>
+                <Typography>
+                  {request.user.displayName} ({request.user.email})
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography variant="body2">Reason: {request.reason}</Typography>
-                <Typography variant="caption">Requested: {new Date(request.requestedAt).toLocaleDateString()}</Typography>
+                <Typography variant='body2'>
+                  Reason: {request.reason}
+                </Typography>
+                <Typography variant='caption'>
+                  Requested:{' '}
+                  {new Date(request.requestedAt).toLocaleDateString()}
+                </Typography>
                 <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                  <Button variant="contained" color="success" onClick={() => handleManageRequest(request._id, 'approved')}>
+                  <Button
+                    variant='contained'
+                    color='success'
+                    onClick={() => handleManageRequest(request._id, 'approved')}
+                  >
                     Approve
                   </Button>
-                  <Button variant="contained" color="error" onClick={() => handleManageRequest(request._id, 'denied')}>
+                  <Button
+                    variant='contained'
+                    color='error'
+                    onClick={() => handleManageRequest(request._id, 'denied')}
+                  >
                     Deny
                   </Button>
                 </Box>

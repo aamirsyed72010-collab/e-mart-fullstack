@@ -2,7 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from 'components/LoadingSpinner';
 import SellerAnalytics from 'components/SellerAnalytics';
 import { allTags, allCategories } from 'constants/productConstants';
-import { fetchSellerProducts, fetchAnalytics, addProduct, updateProduct, deleteProduct } from 'services/api';
+import {
+  fetchSellerProducts,
+  fetchAnalytics,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from 'services/api';
 import {
   Container,
   Grid,
@@ -112,14 +118,32 @@ const SellerDashboardPage = () => {
     e.preventDefault();
     setMessage('');
     setError('');
-    if (!formData.name || !formData.description || !formData.price || !formData.imageUrl || !formData.stock || !formData.category || formData.tags.length === 0) {
-      setError('Please fill in all product fields, including category, stock and at least one tag.');
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.price ||
+      !formData.imageUrl ||
+      !formData.stock ||
+      !formData.category ||
+      formData.tags.length === 0
+    ) {
+      setError(
+        'Please fill in all product fields, including category, stock and at least one tag.'
+      );
       return;
     }
     try {
       const data = await addProduct(formData);
       setMessage(`Product "${data.name}" added successfully!`);
-      setFormData({ name: '', description: '', price: '', imageUrl: '', stock: '', tags: [], category: '' });
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        imageUrl: '',
+        stock: '',
+        tags: [],
+        category: '',
+      });
       loadSellerProducts();
       loadAnalytics();
     } catch (err) {
@@ -160,48 +184,111 @@ const SellerDashboardPage = () => {
     setEditingProduct(product);
     setIsModalOpen(true);
   };
-  
+
   const closeEditModal = () => {
     setIsModalOpen(false);
     setEditingProduct(null);
-  }
+  };
 
   const renderProductForm = (data, handler, isEdit = false) => (
-    <Box component="form" onSubmit={isEdit ? handleUpdate : handleSubmit}>
+    <Box component='form' onSubmit={isEdit ? handleUpdate : handleSubmit}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField fullWidth label="Product Name" name="name" value={data.name} onChange={handler} required />
+          <TextField
+            fullWidth
+            label='Product Name'
+            name='name'
+            value={data.name}
+            onChange={handler}
+            required
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth multiline rows={3} label="Description" name="description" value={data.description} onChange={handler} required />
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            label='Description'
+            name='description'
+            value={data.description}
+            onChange={handler}
+            required
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField fullWidth type="number" label="Price" name="price" value={data.price} onChange={handler} required inputProps={{ step: "0.01" }} />
+          <TextField
+            fullWidth
+            type='number'
+            label='Price'
+            name='price'
+            value={data.price}
+            onChange={handler}
+            required
+            inputProps={{ step: '0.01' }}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField fullWidth type="number" label="Stock Quantity" name="stock" value={data.stock} onChange={handler} required />
+          <TextField
+            fullWidth
+            type='number'
+            label='Stock Quantity'
+            name='stock'
+            value={data.stock}
+            onChange={handler}
+            required
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField fullWidth type="url" label="Image URL" name="imageUrl" value={data.imageUrl} onChange={handler} required />
+          <TextField
+            fullWidth
+            type='url'
+            label='Image URL'
+            name='imageUrl'
+            value={data.imageUrl}
+            onChange={handler}
+            required
+          />
         </Grid>
         <Grid item xs={12}>
           <FormControl fullWidth required>
             <InputLabel>Category</InputLabel>
-            <Select name="category" value={data.category} label="Category" onChange={handler}>
-              {allCategories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
+            <Select
+              name='category'
+              value={data.category}
+              label='Category'
+              onChange={handler}
+            >
+              {allCategories.map((cat) => (
+                <MenuItem key={cat} value={cat}>
+                  {cat}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
           <Typography>Tags</Typography>
           <FormGroup row>
-            {allTags.map(tag => (
-              <FormControlLabel key={tag} control={<Checkbox name="tags" value={tag} checked={data.tags.includes(tag)} onChange={handler} />} label={tag} />
+            {allTags.map((tag) => (
+              <FormControlLabel
+                key={tag}
+                control={
+                  <Checkbox
+                    name='tags'
+                    value={tag}
+                    checked={data.tags.includes(tag)}
+                    onChange={handler}
+                  />
+                }
+                label={tag}
+              />
             ))}
           </FormGroup>
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" variant="contained" fullWidth>{isEdit ? 'Save Changes' : 'Add Product'}</Button>
+          <Button type='submit' variant='contained' fullWidth>
+            {isEdit ? 'Save Changes' : 'Add Product'}
+          </Button>
         </Grid>
       </Grid>
     </Box>
@@ -209,48 +296,79 @@ const SellerDashboardPage = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+      <Typography variant='h4' component='h1' gutterBottom align='center'>
         Seller Dashboard
       </Typography>
-      
+
       <Paper sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h5" gutterBottom>Your Analytics</Typography>
-        {loadingAnalytics ? <LoadingSpinner /> : <SellerAnalytics analytics={analytics} />}
+        <Typography variant='h5' gutterBottom>
+          Your Analytics
+        </Typography>
+        {loadingAnalytics ? (
+          <LoadingSpinner />
+        ) : (
+          <SellerAnalytics analytics={analytics} />
+        )}
       </Paper>
 
       <Grid container spacing={4}>
         <Grid item xs={12} lg={6}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h5" gutterBottom>Add a New Product</Typography>
-            {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            <Typography variant='h5' gutterBottom>
+              Add a New Product
+            </Typography>
+            {message && (
+              <Alert severity='success' sx={{ mb: 2 }}>
+                {message}
+              </Alert>
+            )}
+            {error && (
+              <Alert severity='error' sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
             {renderProductForm(formData, handleChange)}
           </Paper>
         </Grid>
 
         <Grid item xs={12} lg={6}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h5" gutterBottom>Your Products</Typography>
-            {loadingProducts ? <LoadingSpinner /> : (
+            <Typography variant='h5' gutterBottom>
+              Your Products
+            </Typography>
+            {loadingProducts ? (
+              <LoadingSpinner />
+            ) : (
               <List>
-                {products.map(p => (
+                {products.map((p) => (
                   <ListItem
                     key={p._id}
                     secondaryAction={
                       <>
-                        <IconButton edge="end" aria-label="edit" onClick={() => openEditModal(p)}>
+                        <IconButton
+                          edge='end'
+                          aria-label='edit'
+                          onClick={() => openEditModal(p)}
+                        >
                           <Edit />
                         </IconButton>
-                        <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(p._id)}>
+                        <IconButton
+                          edge='end'
+                          aria-label='delete'
+                          onClick={() => handleDelete(p._id)}
+                        >
                           <Delete />
                         </IconButton>
                       </>
                     }
                   >
                     <ListItemAvatar>
-                      <Avatar src={p.imageUrl} alt={p.name} variant="square" />
+                      <Avatar src={p.imageUrl} alt={p.name} variant='square' />
                     </ListItemAvatar>
-                    <ListItemText primary={p.name} secondary={`Stock: ${p.stock}`} />
+                    <ListItemText
+                      primary={p.name}
+                      secondary={`Stock: ${p.stock}`}
+                    />
                   </ListItem>
                 ))}
               </List>
@@ -261,10 +379,11 @@ const SellerDashboardPage = () => {
 
       <Modal open={isModalOpen} onClose={closeEditModal}>
         <Box sx={modalStyle}>
-          <Typography variant="h6" component="h2" gutterBottom>
+          <Typography variant='h6' component='h2' gutterBottom>
             Edit Product
           </Typography>
-          {editingProduct && renderProductForm(editingProduct, handleChange, true)}
+          {editingProduct &&
+            renderProductForm(editingProduct, handleChange, true)}
         </Box>
       </Modal>
     </Container>

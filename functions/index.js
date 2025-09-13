@@ -43,10 +43,16 @@ console.log('Backend NODE_ENV:', process.env.NODE_ENV);
 console.log('Backend frontendUrl for CORS:', frontendUrl);
 
 // Middleware
+const corsWhitelist = [frontendUrl];
+if (process.env.NODE_ENV !== 'production') {
+  // For local development, add localhost origins
+  corsWhitelist.push('http://127.0.0.1:5000', 'http://localhost:5000', 'http://localhost:3000');
+}
+
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = [frontendUrl, 'http://127.0.0.1:5000', 'http://localhost:5000', 'http://localhost:3000'];
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    // `!origin` allows server-to-server, Postman etc.
+    if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

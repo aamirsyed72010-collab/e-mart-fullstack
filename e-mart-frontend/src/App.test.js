@@ -39,7 +39,9 @@ test('renders the homepage with the main heading', async () => {
   api.getCurrentUser.mockResolvedValue(null);
 
   renderWithProviders(<App />);
-  
-  const headingElement = await screen.findByRole('heading', { name: /Discover Tomorrow's Tech, Today./i });
+
+  const headingElement = await screen.findByRole('heading', {
+    name: /Discover Tomorrow's Tech, Today./i,
+  });
   expect(headingElement).toBeInTheDocument();
 });

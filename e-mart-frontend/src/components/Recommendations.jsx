@@ -36,11 +36,15 @@ const Recommendations = ({ productId }) => {
 
   return (
     <Box sx={{ mt: 6 }}>
-      <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
+      <Typography
+        variant='h5'
+        component='h2'
+        sx={{ mb: 3, fontWeight: 'bold' }}
+      >
         You Might Also Like
       </Typography>
       <Grid container spacing={3}>
-        {recommendations.map(product => (
+        {recommendations.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
             <ProductCard product={product} />
           </Grid>

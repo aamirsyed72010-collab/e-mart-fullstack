@@ -14,7 +14,7 @@ import {
   Avatar,
   CircularProgress,
 } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useTheme as useThemeMui } from '@mui/material/styles';
 import {
   Search as SearchIcon,
   AccountCircle as AccountCircleIcon,
@@ -33,13 +33,20 @@ import { useTheme } from '../context/ThemeContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import GoogleIcon from '@mui/icons-material/Google';
+import { useScroll, useMotionValueEvent } from 'framer-motion';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? alpha(theme.palette.common.white, 0.15)
+      : alpha(theme.palette.common.black, 0.05),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? alpha(theme.palette.common.white, 0.25)
+        : alpha(theme.palette.common.black, 0.1),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -82,6 +89,13 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
   const navigate = useNavigate();
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+  const themeMui = useThemeMui();
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    setScrolled(latest > 50);
+  });
 
   const handleLogout = async () => {
     await logout();
@@ -106,18 +120,27 @@ const Header = () => {
 
   const renderAuthContent = () => {
     if (loading) {
-      return <CircularProgress color="inherit" size={24} />;
+      return <CircularProgress color='inherit' size={24} />;
     } else if (user) {
       return (
         <>
           {user.role === 'seller' && (
-            <IconButton component={RouterLink} to="/seller/dashboard" title="Seller Dashboard" color="inherit">
+            <IconButton
+              component={RouterLink}
+              to='/seller/dashboard'
+              title='Seller Dashboard'
+              color='inherit'
+            >
               <BuildIcon />
             </IconButton>
           )}
           {user.role === 'admin' && (
             <>
-              <IconButton onClick={handleAdminMenuOpen} title="Admin Settings" color="inherit">
+              <IconButton
+                onClick={handleAdminMenuOpen}
+                title='Admin Settings'
+                color='inherit'
+              >
                 <SettingsIcon />
               </IconButton>
               <Menu
@@ -125,25 +148,66 @@ const Header = () => {
                 open={Boolean(adminMenuAnchor)}
                 onClose={handleAdminMenuClose}
               >
-                <MenuItem component={RouterLink} to="/admin/seller-requests" onClick={handleAdminMenuClose}>Seller Requests</MenuItem>
-                <MenuItem component={RouterLink} to="/admin/users" onClick={handleAdminMenuClose}>Manage Users</MenuItem>
-                <MenuItem component={RouterLink} to="/admin/products" onClick={handleAdminMenuClose}>Manage Products</MenuItem>
-                <MenuItem component={RouterLink} to="/admin/reviews" onClick={handleAdminMenuClose}>Manage Reviews</MenuItem>
-                <MenuItem component={RouterLink} to="/admin/admin-requests" onClick={handleAdminMenuClose}>Manage Admin Requests</MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to='/admin/seller-requests'
+                  onClick={handleAdminMenuClose}
+                >
+                  Seller Requests
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to='/admin/users'
+                  onClick={handleAdminMenuClose}
+                >
+                  Manage Users
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to='/admin/products'
+                  onClick={handleAdminMenuClose}
+                >
+                  Manage Products
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to='/admin/reviews'
+                  onClick={handleAdminMenuClose}
+                >
+                  Manage Reviews
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to='/admin/admin-requests'
+                  onClick={handleAdminMenuClose}
+                >
+                  Manage Admin Requests
+                </MenuItem>
               </Menu>
             </>
           )}
-          <IconButton component={RouterLink} to="/account" title="My Account" color="inherit">
+          <IconButton
+            component={RouterLink}
+            to='/account'
+            title='My Account'
+            color='inherit'
+          >
             {user.profilePicture ? (
-              <Avatar src={user.profilePicture} sx={{ width: 24, height: 24 }} />
+              <Avatar
+                src={user.profilePicture}
+                sx={{ width: 24, height: 24 }}
+              />
             ) : (
               <AccountCircleIcon />
             )}
           </IconButton>
-          <Typography variant="body2" sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Typography
+            variant='body2'
+            sx={{ display: { xs: 'none', md: 'block' } }}
+          >
             {user.displayName}
           </Typography>
-          <IconButton onClick={handleLogout} title="Logout" color="inherit">
+          <IconButton onClick={handleLogout} title='Logout' color='inherit'>
             <LogoutIcon />
           </IconButton>
         </>
@@ -152,9 +216,9 @@ const Header = () => {
       return (
         <Button
           onClick={login}
-          title="Sign In with Google"
-          variant="contained"
-          color="secondary"
+          title='Sign In with Google'
+          variant='contained'
+          color='primary'
           startIcon={<GoogleIcon />}
         >
           Sign In
@@ -164,13 +228,26 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="sticky" enableColorOnDark>
+    <AppBar
+      position='sticky'
+      enableColorOnDark
+      sx={{
+        backdropFilter: scrolled ? 'blur(8px)' : 'none',
+        backgroundColor: alpha(
+          themeMui.palette.background.paper,
+          scrolled ? 0.85 : 1
+        ),
+        borderBottom: `1px solid ${scrolled ? themeMui.palette.divider : 'transparent'}`,
+        transition:
+          'background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
+      }}
+    >
       <Toolbar>
         <Typography
-          variant="h6"
+          variant='h6'
           noWrap
           component={RouterLink}
-          to="/"
+          to='/'
           sx={{
             mr: 2,
             display: { xs: 'none', md: 'flex' },
@@ -192,7 +269,7 @@ const Header = () => {
           </SearchIconWrapper>
           <form onSubmit={handleSearchSubmit}>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder='Search…'
               inputProps={{ 'aria-label': 'search' }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -203,24 +280,47 @@ const Header = () => {
         <Box sx={{ flexGrow: 1 }} />
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton onClick={toggleTheme} title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} color="inherit">
+          <IconButton
+            onClick={toggleTheme}
+            title={
+              themeMode === 'dark'
+                ? 'Switch to Light Mode'
+                : 'Switch to Dark Mode'
+            }
+            color='inherit'
+          >
             {themeMode === 'dark' ? <WbSunnyIcon /> : <Brightness4Icon />}
           </IconButton>
 
           {renderAuthContent()}
 
-          <IconButton component={RouterLink} to="/compare" title="Compare Products" color="inherit">
-            <Badge badgeContent={comparisonCount} color="secondary">
+          <IconButton
+            component={RouterLink}
+            to='/compare'
+            title='Compare Products'
+            color='inherit'
+          >
+            <Badge badgeContent={comparisonCount} color='secondary'>
               <ViewColumnIcon />
             </Badge>
           </IconButton>
-          <IconButton component={RouterLink} to="/wishlist" title="My Wishlist" color="inherit">
-            <Badge badgeContent={wishlistCount} color="secondary">
+          <IconButton
+            component={RouterLink}
+            to='/wishlist'
+            title='My Wishlist'
+            color='inherit'
+          >
+            <Badge badgeContent={wishlistCount} color='secondary'>
               <FavoriteBorderIcon />
             </Badge>
           </IconButton>
-          <IconButton component={RouterLink} to="/cart" title="My Cart" color="inherit">
-            <Badge badgeContent={cartCount} color="secondary">
+          <IconButton
+            component={RouterLink}
+            to='/cart'
+            title='My Cart'
+            color='inherit'
+          >
+            <Badge badgeContent={cartCount} color='secondary'>
               <ShoppingCartIcon />
             </Badge>
           </IconButton>

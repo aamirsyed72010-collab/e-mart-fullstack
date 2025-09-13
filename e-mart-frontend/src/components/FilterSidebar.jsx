@@ -36,22 +36,22 @@ const FilterSidebar = ({ filters, setFilters, allTags, allCategories }) => {
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant='h6' gutterBottom>
         Filters
       </Typography>
 
       <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel id="sort-by-label">Sort By</InputLabel>
+        <InputLabel id='sort-by-label'>Sort By</InputLabel>
         <Select
-          labelId="sort-by-label"
-          id="sort"
+          labelId='sort-by-label'
+          id='sort'
           value={filters.sortBy}
-          label="Sort By"
+          label='Sort By'
           onChange={handleSortChange}
         >
-          <MenuItem value="newest">Newest</MenuItem>
-          <MenuItem value="price_asc">Price: Low to High</MenuItem>
-          <MenuItem value="price_desc">Price: High to Low</MenuItem>
+          <MenuItem value='newest'>Newest</MenuItem>
+          <MenuItem value='price_asc'>Price: Low to High</MenuItem>
+          <MenuItem value='price_desc'>Price: High to Low</MenuItem>
         </Select>
       </FormControl>
 
@@ -59,17 +59,17 @@ const FilterSidebar = ({ filters, setFilters, allTags, allCategories }) => {
         <Typography gutterBottom>Price Range</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <TextField
-            type="number"
-            name="price_min"
-            label="Min"
+            type='number'
+            name='price_min'
+            label='Min'
             value={filters.price_min}
             onChange={handlePriceChange}
             fullWidth
           />
           <TextField
-            type="number"
-            name="price_max"
-            label="Max"
+            type='number'
+            name='price_max'
+            label='Max'
             value={filters.price_max}
             onChange={handlePriceChange}
             fullWidth
@@ -78,22 +78,26 @@ const FilterSidebar = ({ filters, setFilters, allTags, allCategories }) => {
       </Box>
 
       <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel id="category-label">Category</InputLabel>
+        <InputLabel id='category-label'>Category</InputLabel>
         <Select
-          labelId="category-label"
+          labelId='category-label'
           value={filters.category}
-          label="Category"
+          label='Category'
           onChange={handleCategoryChange}
         >
-          <MenuItem value="">All</MenuItem>
-          {allCategories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
+          <MenuItem value=''>All</MenuItem>
+          {allCategories.map((cat) => (
+            <MenuItem key={cat} value={cat}>
+              {cat}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
       <Box>
         <Typography gutterBottom>Tags</Typography>
         <FormGroup sx={{ maxHeight: 200, overflowY: 'auto' }}>
-          {allTags.map(tag => (
+          {allTags.map((tag) => (
             <FormControlLabel
               key={tag}
               control={

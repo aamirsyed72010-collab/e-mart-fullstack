@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { fetchAdminUsers, updateUserRole, deleteUser } from '../../services/api';
+import {
+  fetchAdminUsers,
+  updateUserRole,
+  deleteUser,
+} from '../../services/api';
 import {
   Container,
   Paper,
@@ -53,7 +57,9 @@ const AdminUsersPage = () => {
   };
 
   const handleDelete = async (userId) => {
-    if (window.confirm('Are you sure you want to permanently delete this user?')) {
+    if (
+      window.confirm('Are you sure you want to permanently delete this user?')
+    ) {
       try {
         await deleteUser(userId);
         setMessage('User deleted successfully.');
@@ -66,14 +72,24 @@ const AdminUsersPage = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+      <Typography variant='h4' component='h1' gutterBottom align='center'>
         User Management
       </Typography>
       <Paper sx={{ p: 3 }}>
-        {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        
-        {loading ? <LoadingSpinner /> : (
+        {message && (
+          <Alert severity='success' sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+        {error && (
+          <Alert severity='error' sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
           <TableContainer>
             <Table>
               <TableHead>
@@ -81,15 +97,19 @@ const AdminUsersPage = () => {
                   <TableCell>User</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Role</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell align='right'>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map(user => (
+                {users.map((user) => (
                   <TableRow key={user._id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar src={user.profilePicture} alt={user.displayName} sx={{ mr: 2 }} />
+                        <Avatar
+                          src={user.profilePicture}
+                          alt={user.displayName}
+                          sx={{ mr: 2 }}
+                        />
                         <Typography>{user.displayName}</Typography>
                       </Box>
                     </TableCell>
@@ -97,16 +117,21 @@ const AdminUsersPage = () => {
                     <TableCell>
                       <Select
                         value={user.role}
-                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                        onChange={(e) =>
+                          handleRoleChange(user._id, e.target.value)
+                        }
                         sx={{ minWidth: 120 }}
                       >
-                        <MenuItem value="user">User</MenuItem>
-                        <MenuItem value="seller">Seller</MenuItem>
-                        <MenuItem value="admin">Admin</MenuItem>
+                        <MenuItem value='user'>User</MenuItem>
+                        <MenuItem value='seller'>Seller</MenuItem>
+                        <MenuItem value='admin'>Admin</MenuItem>
                       </Select>
                     </TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => handleDelete(user._id)} color="error">
+                    <TableCell align='right'>
+                      <IconButton
+                        onClick={() => handleDelete(user._id)}
+                        color='error'
+                      >
                         <Delete />
                       </IconButton>
                     </TableCell>

@@ -22,7 +22,10 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('themeMode', newThemeMode);
   };
 
-  const theme = useMemo(() => (themeMode === 'light' ? lightTheme : darkTheme), [themeMode]);
+  const theme = useMemo(
+    () => (themeMode === 'light' ? lightTheme : darkTheme),
+    [themeMode]
+  );
 
   const value = {
     themeMode,

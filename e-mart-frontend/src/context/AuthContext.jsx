@@ -1,9 +1,19 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+} from 'firebase/auth';
 import { app } from '../firebase';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Box } from '@mui/material';
-import { getCurrentUser, googleCallback, logout as apiLogout } from '../services/api';
+import {
+  getCurrentUser,
+  googleCallback,
+  logout as apiLogout,
+} from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -42,9 +52,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      
+
       await googleCallback(idToken);
-      
+
       const userData = await getCurrentUser();
       setUser(userData);
 
@@ -80,7 +90,21 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {loading ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }}><LoadingSpinner /></Box> : children}
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100vh',
+          }}
+        >
+          <LoadingSpinner />
+        </Box>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

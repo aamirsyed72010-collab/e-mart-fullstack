@@ -17,30 +17,30 @@ code {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff; /* surface from light theme */
+  background: #f8f9fa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 4px;
+  background: #d1d1d1;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #b1b1b1;
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #2a2a4a;    /* dark_surface from dark theme */
+  background: #202124;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #5f6368;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #9aa0a6;
 }

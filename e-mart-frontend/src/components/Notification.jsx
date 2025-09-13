@@ -15,14 +15,19 @@ const Notification = () => {
   if (!notification) return null;
 
   return (
-    <Snackbar 
+    <Snackbar
       key={notification.key}
-      open={!!notification} 
-      autoHideDuration={3000} 
-      onClose={handleClose} 
+      open={!!notification}
+      autoHideDuration={3000}
+      onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Alert onClose={handleClose} severity={notification.type || 'info'} sx={{ width: '100%' }} variant="filled">
+      <Alert
+        onClose={handleClose}
+        severity={notification.type || 'info'}
+        sx={{ width: '100%' }}
+        variant='filled'
+      >
         {notification.message}
       </Alert>
     </Snackbar>
