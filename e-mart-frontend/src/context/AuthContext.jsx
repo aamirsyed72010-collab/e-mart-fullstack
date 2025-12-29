@@ -1,0 +1,107 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+} from 'firebase/auth';
+import { app } from '../firebase';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { Box } from '@mui/material';
+import { getCurrentUser } from '../services/api';
+
+export const AuthContext = createContext();
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          // When auth state changes, get the user profile from our backend
+          const userData = await getCurrentUser();
+          setUser(userData);
+        } catch (error) {
+          console.error('Error fetching backend user:', error);
+          // This might happen if the token is valid but the backend call fails
+          // Or if the user was deleted from the backend but not from Firebase Auth
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const login = async () => {
+    setLoading(true);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    try {
+      // This handles the Google popup.
+      // After a successful sign-in, the `onAuthStateChanged` listener
+      // in the `useEffect` hook will automatically trigger, which then
+      // calls `getCurrentUser` to fetch or create the user profile.
+      await signInWithPopup(auth, provider);
+      return true;
+    } catch (error) {
+      console.error('A detailed error occurred during Google Sign-In:', error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    setLoading(true);
+    const auth = getAuth(app);
+    try {
+      // Signing out the user from Firebase client
+      await signOut(auth);
+      // onAuthStateChanged will fire, setting the user to null.
+      setUser(null);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const value = {
+    user,
+    loading,
+    login,
+    logout,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100vh',
+          }}
+        >
+          <LoadingSpinner />
+        </Box>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
+};
